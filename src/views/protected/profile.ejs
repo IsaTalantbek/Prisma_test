@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin: 15px 0;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .sidebar a:hover {
+      color: #007bff;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 20px;
+      background-color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .username-container {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .username-container p {
+      font-size: 12px;
+      color: #777;
+    }
+
+    textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      display: block;
+      margin: 10px auto;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .profile-fields {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 5px 0;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <ul>
+        <li><a href="/a/search">Поиск</a></li>
+        <li><a href="/a/posts">Посты</a></li>
+        <li><a href="/a/profile">Профиль</a></li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <h1>Профиль</h1>
+
+      <div class="username-container">
+        <h2 id="username"><%= username %></h2>
+        <p id="login"><%= login %></p>
+      </div>
+
+      <!-- Большое окошко для текста -->
+      <textarea id="info" rows="4" cols="50" placeholder="Напишите что-нибудь..."><%= info %></textarea>
+
+      <!-- Кнопка для изменения имени -->
+      <button id="change-name">Изменить имя</button>
+
+      <div class="profile-fields">
+        <label for="gender">Гендер:</label>
+        <select id="gender">
+          <option value="man" <%- gender === 'man' ? 'selected' : '' %>>Мужской</option>
+          <option value="woman" <%- gender === 'woman' ? 'selected' : '' %>>Женский</option>
+          <option value="undefined" <%- gender === 'undefined' ? 'selected' : '' %>>Другой</option>
+        </select>
+
+        <label for="age">Возраст:</label>
+        <input type="number" id="age" value="<%= age %>" placeholder="Введите ваш возраст" />
+      </div>
+
+      <!-- Кнопка сохранения изменений -->
+      <button id="save-profile">Сохранить изменения</button>
+    </div>
+  </div>
+
+  <script>
+    // Обработчик нажатия кнопки "Изменить имя"
+    document.getElementById('change-name').addEventListener('click', function() {
+      const newName = prompt('Введите новое имя пользователя:');
+      if (newName) {
+        document.getElementById('username').innerText = newName;
+      }
+    });
+
+    // Обработчик нажатия кнопки "Сохранить изменения"
+    document.getElementById('save-profile').addEventListener('click', async function() {
+      const newName = document.getElementById('username').innerText;
+      const info = document.getElementById('info')?.value;
+      const gender = document.getElementById('gender')?.value;
+      const age = document.getElementById('age')?.value;
+
+      // Отправить запрос на сервер для сохранения изменений
+      fetch('/a/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: newName,
+          info: info,
+          gender: gender,
+          age: age
+        })
+      }).then(response => {
+        if (response.ok) {
+          alert('Изменения сохранены');
+          location.reload();
+        } else {
+          response.json().then(errorResponse => {
+            alert(`Ошибка изменения: ${errorResponse.message}`);
+          });
+        }
+      });
+
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Регистрация</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .container {
+                max-width: 400px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+            }
+            input,
+            textarea,
+            select {
+                width: 100%;
+                margin: 8px 0;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+            button {
+                background-color: #4caf50;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            .hidden {
+                display: none;
+            }
+            .slider-container {
+                display: flex;
+                flex-direction: column;
+            }
+            .slider-value {
+                text-align: center;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Регистрация</h2>
+            <form id="registration-form">
+                <div>
+                    <label for="username"
+                        >Логин (от 3 до 20 символов, латиница, цифры, _, -, /,
+                        #):</label
+                    >
+                    <input type="text" id="username" name="username" required />
+                </div>
+                <div>
+                    <label for="password"
+                        >Пароль (мин. 8 символов, одна заглавная буква, без
+                        пробелов):</label
+                    >
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                    />
+                </div>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+
+            <div id="additional-info-form" class="hidden">
+                <h3>Добавьте информацию о себе</h3>
+                <div>
+                    <label for="user-username"
+                        >Псевдоним (по желанию, как и логин):</label
+                    >
+                    <input
+                        type="text"
+                        id="user-username"
+                        name="user-username"
+                    />
+                </div>
+                <div>
+                    <label for="info"
+                        >Информация о себе (не более 250 символов):</label
+                    >
+                    <textarea id="info" name="info" maxlength="250"></textarea>
+                </div>
+                <div>
+                    <label for="gender">Пол:</label>
+                    <select id="gender" name="gender">
+                        <option value="undefined">Не указан</option>
+                        <option value="woman">Женский</option>
+                        <option value="man">Мужской</option>
+                    </select>
+                </div>
+                <div class="slider-container">
+                    <label for="age">Возраст (от 1 до 120):</label>
+                    <input
+                        type="range"
+                        id="age"
+                        name="age"
+                        min="1"
+                        max="120"
+                        value="25"
+                        step="1"
+                    />
+                    <span class="slider-value" id="slider-value">25</span>
+                </div>
+                <button type="button" id="submit-info">Отправить</button>
+                <button type="button" id="skip-info">Пропустить</button>
+            </div>
+        </div>
+
+        <script>
+            const registrationForm =
+                document.getElementById('registration-form')
+            const additionalInfoForm = document.getElementById(
+                'additional-info-form'
+            )
+            const skipButton = document.getElementById('skip-info')
+            const submitInfoButton = document.getElementById('submit-info')
+
+            const ageSlider = document.getElementById('age')
+            const sliderValue = document.getElementById('slider-value')
+
+            // Слушаем изменения на ползунке
+            ageSlider.addEventListener('input', () => {
+                sliderValue.textContent = ageSlider.value
+            })
+
+            registrationForm.addEventListener('submit', (event) => {
+                event.preventDefault()
+
+                const username = document.getElementById('username').value
+                const password = document.getElementById('password').value
+
+                if (checkLogin(username) && isValidPassword(password)) {
+                    registrationForm.classList.add('hidden')
+                    additionalInfoForm.classList.remove('hidden')
+                } else {
+                    alert('Пожалуйста, проверьте ваши данные')
+                }
+            })
+
+            skipButton.addEventListener('click', () => {
+                const login = document.getElementById('username').value
+                const password = document.getElementById('password').value
+
+                fetch('/api/auth/reg', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ login, password }),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            window.location = '/a/main'
+                        } else {
+                            alert('Ошибка при регистрации. Попробуйте снова.')
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка:', error)
+                        alert('Произошла ошибка. Попробуйте позже.')
+                    })
+            })
+
+            submitInfoButton.addEventListener('click', () => {
+                const login = document.getElementById('username').value
+                const password = document.getElementById('password').value
+                const username = document.getElementById('user-username').value
+                const info = document.getElementById('info').value
+                const gender = document.getElementById('gender').value
+                const age = document.getElementById('age').value
+
+                fetch('/api/auth/reg', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        login,
+                        password,
+                        username,
+                        info,
+                        gender,
+                        age,
+                    }),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            window.location = '/a/main'
+                        } else {
+                            alert(response.message)
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка:', error)
+                        alert('Произошла ошибка. Попробуйте позже.')
+                    })
+            })
+
+            function checkLogin(login) {
+                // Убираем все пробелы
+                login = login.replace(/\s+/g, '')
+
+                // Регулярное выражение для проверки:
+                // допускаются латинские буквы, цифры, и символы _, -, /, #
+                // Логин должен быть длиной от 3 до 20 символов
+                const regex = /^[A-Za-z0-9_\-/#]{3,20}$/
+
+                return regex.test(login)
+            }
+
+            function isValidPassword(password) {
+                // Пароль должен содержать минимум одну заглавную букву, минимум 8 символов без пробелов
+                const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/
+                return passwordRegex.test(password)
+            }
+        </script>
+    </body>
+</html>

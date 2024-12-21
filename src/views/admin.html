@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Admin Panel</title>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: rgb(44, 44, 44);
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                flex-direction: column;
+            }
+            .container {
+                background-color: rgb(36, 36, 36);
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgb(0, 0, 0);
+                width: 90%; /* Ширина контейнера относительно экрана */
+                max-width: 1200px; /* Максимальная ширина контейнера */
+                padding: 20px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr); /* 4 колонки */
+                gap: 20px;
+            }
+            h1 {
+                grid-column: span 4;
+                text-align: center;
+                font-size: 24px;
+                color: rgb(200, 200, 200);
+            }
+            h2 {
+                font-size: 18px;
+                color: rgb(200, 200, 200);
+                margin-bottom: 10px;
+            }
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                height: 100%; /* Занимаем всю высоту */
+                justify-content: space-between; /* Равномерное распределение элементов */
+            }
+            input[type='text'],
+            input[type='password'],
+            input[type='number'] {
+                padding: 10px;
+                border: 1px solid rgb(60, 60, 60);
+                border-radius: 5px;
+                font-size: 14px;
+                background-color: rgb(60, 60, 60); /* светло-серый фон */
+                color: rgb(200, 200, 200); /* темно-серый цвет текста */
+            }
+
+            input[type='text']:focus,
+            input[type='password']:focus,
+            input[type='number']:focus {
+                background-color: #12293a; /* светло-синий фон при фокусе */
+                border-color: #0e1c22; /* голубая рамка при фокусе */
+                outline: none; /* убираем стандартную обводку */
+            }
+
+            button {
+                padding: 10px;
+                background-color: #242424;
+                color: #afafaf;
+                border: none;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgb(0, 0, 0);
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                height: 40px; /* Устанавливаем фиксированную высоту для кнопок */
+            }
+            button:hover {
+                background-color: #1b1212;
+            }
+            button:disabled {
+                background-color: #666666;
+                cursor: not-allowed;
+            }
+            .console-output {
+                margin-top: 20px;
+                font-size: 14px;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Admin Panel</h1>
+
+            <div class="form-group">
+                <h2>Создать</h2>
+                <input
+                    type="text"
+                    id="create-username"
+                    placeholder="Username"
+                />
+                <input
+                    type="password"
+                    id="create-password"
+                    placeholder="Password"
+                />
+                <button id="create-button">Создать</button>
+            </div>
+
+            <div class="form-group">
+                <h2>Изменить</h2>
+                <input type="text" id="update-column" placeholder="Column" />
+                <input type="text" id="update-value" placeholder="Value" />
+                <input type="number" id="update-id" placeholder="ID" />
+                <button id="update-button">Изменить</button>
+            </div>
+
+            <div class="form-group">
+                <h2>Удалить</h2>
+                <input type="number" id="delete-id" placeholder="ID" />
+                <button id="delete-button">Удалить</button>
+            </div>
+
+            <div class="form-group">
+                <h2>Получить</h2>
+                <input type="text" id="get-username" placeholder="Login" />
+                <input type="number" id="get-id" placeholder="ID" />
+                <input
+                    type="text"
+                    id="get-table"
+                    placeholder="Table(default 'user')"
+                />
+                <button id="get-button">Получить</button>
+            </div>
+        </div>
+
+        <div class="console-output">
+            <h2>Вывод в консоли</h2>
+        </div>
+
+        <script>
+            const apiUrl = '/api/db' // Путь к серверу
+
+            // Функция для создания пользователя
+            async function createUser() {
+                const login = document.getElementById('create-username').value
+                const password =
+                    document.getElementById('create-password').value
+
+                if (!login || !password) {
+                    console.log({ error: 'Пожалуйста, заполните все поля!' })
+                    return
+                }
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ login, password }),
+                        credentials: 'include', // Эта строка гарантирует передачу куки
+                    })
+                    if (!response.ok) {
+                        console.log(`Ошибка: ${response.status}`)
+                    }
+                    const result = await response.json()
+                    console.table(result.data.result)
+                } catch (error) {
+                    console.error('Ошибка при создании пользователя:', error)
+                }
+            }
+
+            // Функция для обновления пользователя
+            async function updateUser() {
+                const column = document.getElementById('update-column').value
+                const value = document.getElementById('update-value').value
+                const id = document.getElementById('update-id').value
+
+                if (!column || !value || !id) {
+                    console.log({ error: 'Пожалуйста, заполните все поля!' })
+                    return
+                }
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ column, value, id }),
+                        credentials: 'include', // Эта строка гарантирует передачу куки
+                    })
+                    if (!response.ok) {
+                        console.log(`Ошибка: ${response.status}`)
+                    }
+                    const result = await response.json()
+                    console.log('Пользователь обновлен:', result)
+                } catch (error) {
+                    console.error('Ошибка при обновлении пользователя:', error)
+                }
+            }
+
+            // Функция для удаления пользователя
+            async function deleteUser() {
+                const id = document.getElementById('delete-id').value
+
+                if (!id) {
+                    console.log({ error: 'Пожалуйста, укажите ID!' })
+                    return
+                }
+
+                try {
+                    const response = await fetch(`${apiUrl}/${id}`, {
+                        method: 'DELETE',
+                        credentials: 'include', // Эта строка гарантирует передачу куки
+                    })
+                    if (!response.ok) {
+                        console.log(`Ошибка: ${response.status}`)
+                    }
+                    const result = await response.json()
+                    console.log('Пользователь удален:', result)
+                } catch (err) {
+                    console.error('Ошибка при удалении пользователя:', err)
+                }
+            }
+
+            // Функция для получения пользователя
+            async function getUser() {
+                const login = document.getElementById('get-username').value
+                const id = document.getElementById('get-id').value
+                const table = document.getElementById('get-table').value
+
+                const queryParams = new URLSearchParams()
+                if (login) queryParams.append('login', login)
+                if (id) queryParams.append('id', id)
+                if (table) queryParams.append('table', table)
+
+                try {
+                    const response = await fetch(`${apiUrl}?${queryParams}`, {
+                        method: 'GET',
+                        credentials: 'include', // Эта строка гарантирует передачу куки
+                    })
+                    if (!response.ok) {
+                        console.log(`Ошибка: ${response.status}`)
+                    }
+                    const result = await response.json()
+                    console.table(result.data.result) // Отображаем результат в виде таблицы в консоли
+                } catch (error) {
+                    console.error('Ошибка при получении пользователя:', error)
+                }
+            }
+
+            // Привязка обработчиков событий
+            document.addEventListener('DOMContentLoaded', function () {
+                document
+                    .getElementById('create-button')
+                    .addEventListener('click', createUser)
+                document
+                    .getElementById('update-button')
+                    .addEventListener('click', updateUser)
+                document
+                    .getElementById('delete-button')
+                    .addEventListener('click', deleteUser)
+                document
+                    .getElementById('get-button')
+                    .addEventListener('click', getUser)
+            })
+        </script>
+    </body>
+</html>

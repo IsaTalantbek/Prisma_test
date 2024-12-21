@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Загрузка...</title>
+    </head>
+    <body></body>
+    <script>
+        fetch('/get-token', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin', // Это важно для отправки куки
+        })
+            .then((response) => {
+                if ((response.message = 'refresh-200')) {
+                    // Если запрос успешен, возвращаем пользователя на предыдущую страницу
+                    window.history.back()
+                } else {
+                    // Обработка ошибки, если запрос не удался
+                    window.location = '/login'
+                }
+            })
+            .catch((error) => {
+                // Обработка исключений, если что-то пошло не так
+                console.error('Error:', error)
+                alert('Произошла ошибка')
+            })
+    </script>
+</html>

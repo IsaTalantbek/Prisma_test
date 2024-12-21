@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Логин</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: 'Arial', sans-serif;
+                background: #333; /* Темный фон для страницы */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .container {
+                background: #222; /* Темный фон контейнера */
+                border-radius: 10px;
+                padding: 30px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                width: 100%;
+                max-width: 400px;
+                text-align: center;
+                color: #f0f0f0; /* Светлый текст */
+            }
+            h2 {
+                color: #4a90e2;
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
+            input {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                border: 1px solid #444; /* Темная граница для полей */
+                border-radius: 5px;
+                font-size: 16px;
+                background-color: #333; /* Темный фон для полей */
+                color: #f0f0f0; /* Светлый текст внутри поля */
+                transition: all 0.3s ease;
+            }
+            input:focus {
+                border-color: #4a90e2;
+                background-color: #222; /* Более темный фон при фокусе */
+                outline: none;
+            }
+            button {
+                width: 100%;
+                padding: 12px;
+                background-color: #4a90e2;
+                border: none;
+                border-radius: 5px;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            button:hover {
+                background-color: #357ab7;
+            }
+            a {
+                display: inline-block;
+                margin-top: 15px;
+                color: #4a90e2;
+                text-decoration: none;
+                font-size: 14px;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Вход</h2>
+            <form id="login-form" action="/login" method="POST">
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Имя пользователя"
+                    required
+                />
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Пароль"
+                    required
+                />
+                <button type="submit">Войти</button>
+            </form>
+            <a href="/reg">Зарегистрироваться</a>
+        </div>
+
+        <script>
+            const form = document.getElementById('login-form')
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault() // Отменяем отправку формы по умолчанию
+
+                const login = document.getElementById('username').value
+                const password = document.getElementById('password').value
+
+                // Отправляем данные через fetch
+                fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        login: login,
+                        password: password,
+                    }),
+                    credentials: 'same-origin', // Это важно для отправки куки
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.message === 'login-200') {
+                            // Токен уже в cookies, можно перенаправить
+                            window.location.href = '/a/main'
+                        } else {
+                            alert(data.message)
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка:', error)
+                        alert('Произошла ошибка при авторизации')
+                    })
+            })
+        </script>
+    </body>
+</html>
