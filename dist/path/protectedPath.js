@@ -1,7 +1,10 @@
-import path from 'path'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 
 const __dirname = dirname(__filename)
 
-const renderPath = path.join(__dirname, '../views', 'protected')
+const protectedPath = path.join(__dirname, '../views', 'protected')
+
+export default protectedPath
