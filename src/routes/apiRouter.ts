@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import authRouter from './authRouter.ts'
-import DbRouter from './dbRouter.ts'
-import { authenticateToken, checkRole } from '../middleware/authMiddleware.ts'
+import authRouter from './authRouter'
+import DbRouter from './dbRouter'
+import { authenticateToken, checkRole } from '../middleware/authMiddleware'
 
 const router = Router()
 
-router.use('/db', authenticateToken, DbRouter)
+router.use('/db', authenticateToken, checkRole('admin'), DbRouter)
 router.use('/auth', authRouter)
 
 export default router

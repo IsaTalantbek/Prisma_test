@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import path from 'path'
-import refreshController from '../controllers/auth/refreshController.ts'
+import refreshController from '../controllers/auth/refreshController'
 
 const __dirname = path.resolve()
 const router = Router()

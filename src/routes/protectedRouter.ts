@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import path from 'path'
-import { checkRole } from '../middleware/authMiddleware.ts'
-import profileController from '../controllers/profile/profileController.ts'
+import { checkRole } from '../middleware/authMiddleware'
+import profileController from '../controllers/profile/profileController'
 
 const __dirname = path.resolve()
 const router = Router()

@@ -2,10 +2,10 @@ import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import checkLogin from '../../check/loginCheck.ts'
-import checkInfo from '../../check/infoCheck.ts'
-import checkAge from '../../check/ageCheck.ts'
-import checkGender from '../../check/genderCheck.ts'
+import checkLogin from '../../check/loginCheck'
+import checkInfo from '../../check/infoCheck'
+import checkAge from '../../check/ageCheck'
+import checkGender from '../../check/genderCheck'
 
 dotenv.config()
 

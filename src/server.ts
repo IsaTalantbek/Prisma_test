@@ -1,11 +1,11 @@
 import express, { Application } from 'express'
-import publicRouter from './routes/publicRouter.ts'
-import protectedRouter from './routes/protectedRouter.ts'
-import apiRouter from './routes/apiRouter.ts'
+import publicRouter from './routes/publicRouter'
+import protectedRouter from './routes/protectedRouter'
+import apiRouter from './routes/apiRouter'
 import dotenv from 'dotenv'
-import { authenticateToken } from './middleware/authMiddleware.ts'
+import { authenticateToken } from './middleware/authMiddleware'
 import cookieParser from 'cookie-parser'
-import { errorHandler } from './middleware/errorMiddleware.ts'
+import { errorHandler } from './middleware/errorMiddleware'
 import path from 'path'
 dotenv.config()
 
