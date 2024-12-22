@@ -7,6 +7,7 @@ import { authenticateToken } from './middleware/authMiddleware.js'
 import cookieParser from 'cookie-parser'
 import { errorHandler } from './middleware/errorMiddleware.js'
 import path from 'path'
+import errorPath from './path/errorPath.js'
 dotenv.config()
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 10000
 const __dirname = path.resolve()
@@ -22,7 +23,7 @@ app.use('/', publicRouter)
 app.use('/a', authenticateToken, protectedRouter)
 app.use('/api', apiRouter)
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'src', 'views', 'error.html'))
+    res.status(404).sendFile(errorPath())
 })
 app.listen(PORT, '0.0.0.0', () => {
     console.log('server started')
