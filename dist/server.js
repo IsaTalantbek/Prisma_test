@@ -18,10 +18,10 @@ app.set('view engine', 'ejs')
 app.use(errorHandler)
 app.use(express.json())
 app.use(cookieParser())
-// Применяешь публичный роутер
 app.use('/', publicRouter)
 app.use('/a', authenticateToken, protectedRouter)
 app.use('/api', apiRouter)
+
 app.use((req, res) => {
     res.status(404).sendFile(errorPath)
 })
