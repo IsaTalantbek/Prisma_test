@@ -12,7 +12,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 10000
 const __dirname = path.resolve()
 const app = express()
 dotenv.config()
-app.set('views', path.join(__dirname, 'src', 'views', 'protected'))
+app.set('views', path.join(__dirname, 'dist', 'views', 'protected'))
 app.set('view engine', 'ejs')
 app.use(errorHandler)
 app.use(express.json())
