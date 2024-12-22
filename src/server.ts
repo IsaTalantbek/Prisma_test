@@ -7,7 +7,9 @@ import { authenticateToken } from './middleware/authMiddleware.ts'
 import cookieParser from 'cookie-parser'
 import { errorHandler } from './middleware/errorMiddleware.ts'
 import path from 'path'
+dotenv.config()
 
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 10000
 const __dirname = path.resolve()
 
 const app: Application = express()
@@ -30,6 +32,6 @@ app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, 'src', 'views', 'error.html'))
 })
 
-app.listen(process.env.PORT, () => {
-    console.log('server started on http://localhost:3000')
+app.listen(PORT, '0.0.0.0', () => {
+    console.log('server started')
 })

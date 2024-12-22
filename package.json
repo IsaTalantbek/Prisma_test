@@ -4,7 +4,8 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
-        "test": "server.ts"
+        "start": "node dist/server.js",
+        "build": "npx tsc"
     },
     "author": "isat",
     "license": "ISC",

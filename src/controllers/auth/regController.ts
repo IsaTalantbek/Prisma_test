@@ -1,4 +1,4 @@
-import createDB from '../../../prisma/service/createDB.ts'
+import createDB from '../../service/createDB.ts'
 import checkAge from '../../check/ageCheck.ts'
 import checkInfo from '../../check/infoCheck.ts'
 import checkLogin from '../../check/loginCheck.ts'

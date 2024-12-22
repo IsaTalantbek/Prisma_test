@@ -1,4 +1,4 @@
-import fetchDB from '../../../prisma/service/fetchDB.ts'
+import fetchDB from '../../service/fetchDB.ts'
 
 const fetchController = async (req: any, res: any) => {
     try {
