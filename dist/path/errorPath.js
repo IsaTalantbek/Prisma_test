@@ -1,7 +1,9 @@
 import path from 'path'
 
-const __dirname = path.resolve()
+const __filename = fileURLToPath(import.meta.url)
 
-const errorPath = path.join(__dirname, 'dist', 'views', 'error.html')
+const __dirname = dirname(__filename)
+
+const errorPath = path.join(__dirname, '../views', 'error.html')
 
 export default errorPath
