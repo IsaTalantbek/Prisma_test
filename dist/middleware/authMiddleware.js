@@ -5,8 +5,8 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 dotenv.config()
 const __dirname = path.resolve()
-const loginPagePath = path.join(__dirname, 'dist', 'views', 'login.html')
-const errorPage = path.join(__dirname, 'dist', 'views', 'error.html')
+const loginPagePath = path.join(__dirname, 'views', 'login.html')
+const errorPage = path.join(__dirname, 'views', 'error.html')
 const JWT_SECRET = process.env.JWT_SECRET || 'hello-WORLD-im-from-B'
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'secret-refresh'
 export const authenticateToken = async (req, res, next) => {

@@ -6,12 +6,10 @@ const __dirname = path.resolve()
 const router = Router()
 // Маршрут для главной страницы
 router.get('/main', (req, res) => {
-    res.sendFile(
-        path.join(__dirname, 'dist', 'views', 'protected', 'main.html')
-    )
+    res.sendFile(path.join(__dirname, 'views', 'protected', 'main.html'))
 })
 router.get('/admin-panel', checkRole('admin'), (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'views', 'admin.html'))
+    res.sendFile(path.join(__dirname, 'views', 'admin.html'))
 })
 router.use(
     '/profile',

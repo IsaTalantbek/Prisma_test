@@ -6,12 +6,11 @@ import dotenv from 'dotenv'
 import { authenticateToken } from './middleware/authMiddleware.js'
 import cookieParser from 'cookie-parser'
 import { errorHandler } from './middleware/errorMiddleware.js'
-import path from 'path'
 import errorPath from './path/errorPath.js'
 import protectedPath from './path/protectedPath.js'
 dotenv.config()
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 10000
-const __dirname = path.resolve()
+
 const app = express()
 dotenv.config()
 app.set('views', protectedPath)
