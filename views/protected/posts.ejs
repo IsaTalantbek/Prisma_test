@@ -214,13 +214,7 @@
                         })
                             .then((response) => response.json())
                             .then((data) => {
-                                const likeCount = document.querySelector(
-                                    `#like-${postId}`
-                                )
-                                likeCount.innerText = `👍 ${data.likes}`
-                                if (data.success) {
-                                    e.target.classList.toggle('active')
-                                }
+                                location.reload()
                             })
                     })
                 })
@@ -234,13 +228,7 @@
                         })
                             .then((response) => response.json())
                             .then((data) => {
-                                const dislikeCount = document.querySelector(
-                                    `#dislike-${postId}`
-                                )
-                                dislikeCount.innerText = `👎 ${data.dislikes}`
-                                if (data.success) {
-                                    e.target.classList.toggle('active')
-                                }
+                                location.reload()
                             })
                     })
                 })
@@ -258,11 +246,7 @@
                                 .then((response) => response.json())
                                 .then((data) => {
                                     if (data.success) {
-                                        const postElement =
-                                            document.getElementById(
-                                                `post-${postId}`
-                                            )
-                                        postElement.remove()
+                                        location.reload()
                                     }
                                 })
                         }
