@@ -209,7 +209,7 @@
                 document.querySelectorAll('.like-btn').forEach((btn) => {
                     btn.addEventListener('click', (e) => {
                         const postId = e.target.getAttribute('data-id')
-                        fetch(`/a/main/like/${postId}`, {
+                        fetch(`/a/main/${postId}/like`, {
                             method: 'POST',
                         })
                             .then((response) => response.json())
@@ -229,7 +229,7 @@
                 document.querySelectorAll('.dislike-btn').forEach((btn) => {
                     btn.addEventListener('click', (e) => {
                         const postId = e.target.getAttribute('data-id')
-                        fetch(`/a/main/dislike/${postId}`, {
+                        fetch(`/a/main/${postId}/dislike`, {
                             method: 'POST',
                         })
                             .then((response) => response.json())
@@ -252,7 +252,7 @@
                         if (
                             confirm('Вы уверены, что хотите удалить этот пост?')
                         ) {
-                            fetch(`/a/main/delete/${postId}`, {
+                            fetch(`/a/main/${postId}/delete`, {
                                 method: 'DELETE',
                             })
                                 .then((response) => response.json())
