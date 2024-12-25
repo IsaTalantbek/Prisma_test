@@ -69,7 +69,7 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
             console.log('Access token verification failed:', err.message)
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
             res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
-            return res.sendStatus(403) // Токен поврежден или просрочен
+            return res.sendStatus(403).redirect('/reg') // Токен поврежден или просрочен
         }
         req.user = user
         next()

@@ -119,7 +119,7 @@
             <div class="form-group">
                 <h2>Забанить/Удалить пост</h2>
                 <input type="number" id="delete-id" placeholder="ID" />
-                <input type="string" id="type-delete" placeholder="user/post" />
+                <input type="text" id="type-delete" placeholder="user/post" />
                 <button id="delete-button">Забанить/Удалить пост</button>
             </div>
 
@@ -215,7 +215,7 @@
                 if (type) queryParams.append('table', type)
 
                 try {
-                    const response = await fetch(`${apiUrl}/${queryParams}`, {
+                    const response = await fetch(`${apiUrl}/?${queryParams}`, {
                         method: 'DELETE',
                         credentials: 'include', // Эта строка гарантирует передачу куки
                     })

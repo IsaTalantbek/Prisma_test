@@ -5,7 +5,9 @@ const prisma = new PrismaClient()
 
 const getController = async (req: any, res: any) => {
     try {
-        const { login, id, table } = req.query
+        let { login, id, table } = req.query
+
+        id = parseInt(id, 10)
 
         if (table === 'user' || table === 'info') {
             const result = await fetchDB({ login, id, table })
@@ -21,7 +23,7 @@ const getController = async (req: any, res: any) => {
                 return res.status(200).json({ result })
             }
         }
-        return res.status(200).json({
+        return res.status(500).json({
             message: `возможно вы ввели неправильную таблицу: ${table}`,
         })
     } catch (error: any) {
