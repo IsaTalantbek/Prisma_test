@@ -15,6 +15,66 @@ const prisma = new PrismaClient()
 
 const router = Router()
 
+router.get('/:id', async (req: any, res: any) => {
+    const userId = await parseInt(req.params.id, 10)
+    try {
+        const user = await prisma.user.findFirst({
+            where: { id: userId },
+            include: { info: true },
+        })
+
+        if (!user) {
+            return res.status(500).send('Похоже, такого человека нет')
+        }
+        if (!user.info) {
+            return res
+                .status(500)
+                .send('Похоже, информация этого человека удалена')
+        }
+
+        res.render('userProfile', {
+            username: user.username,
+            login: user.login,
+            age: user.info.age,
+            info: user.info.info,
+            gender: user.info.gender,
+        })
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).send('Ошибка загрузки профиля')
+    }
+})
+
+router.get('/s/:login', async (req: any, res: any) => {
+    const userLogin = req.params.login
+    try {
+        const user = await prisma.user.findFirst({
+            where: { login: userLogin },
+            include: { info: true },
+        })
+
+        if (!user) {
+            return res.status(500).send('Похоже, такого человека нет')
+        }
+        if (!user.info) {
+            return res
+                .status(500)
+                .send('Похоже, информация этого человека удалена')
+        }
+
+        res.render('userProfile', {
+            username: user.username,
+            login: user.login,
+            age: user.info.age,
+            info: user.info.info,
+            gender: user.info.gender,
+        })
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).send('Серверная ошибка, хз че случилось')
+    }
+})
+
 router.get('/', async (req: any, res: any) => {
     const token = req.cookies['aAuthToken']
     if (!token) {

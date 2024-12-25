@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Поиск пользователя</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                background-color: #f5f5f5;
+            }
+
+            .container {
+                display: flex;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 200px;
+                background-color: #f4f4f4;
+                padding: 20px;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .sidebar li {
+                margin: 15px 0;
+            }
+
+            .sidebar a {
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+            }
+
+            .sidebar a:hover {
+                color: #007bff;
+            }
+
+            .main-content {
+                flex-grow: 1;
+                padding: 20px;
+                background-color: #fff;
+                max-width: 800px;
+                margin: 0 auto;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .search-form {
+                text-align: center;
+                margin: 50px 0;
+            }
+
+            .search-form input[type='text'] {
+                width: 80%;
+                padding: 10px;
+                font-size: 18px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            .search-form input[type='submit'] {
+                margin-left: 10px;
+                padding: 10px 20px;
+                font-size: 18px;
+                border: none;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: white;
+                cursor: pointer;
+            }
+
+            .search-form input[type='submit']:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="sidebar">
+                <ul>
+                    <li><a href="/a/search">Поиск</a></li>
+                    <li><a href="/a/main">Посты</a></li>
+                    <li><a href="/a/profile">Профиль</a></li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <div class="search-form">
+                    <form onsubmit="event.preventDefault(); handleSearch();">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Введите логин или ID"
+                            required
+                        />
+                        <input type="submit" value="Искать" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            function handleSearch() {
+                const input = document
+                    .getElementById('searchInput')
+                    .value.trim()
+                if (/^\d+$/.test(input)) {
+                    // Если введён только ID
+                    window.location.href = `/a/profile/${input}`
+                } else {
+                    // Если введён логин
+                    window.location.href = `/a/profile/s/${input}`
+                }
+            }
+        </script>
+    </body>
+</html>

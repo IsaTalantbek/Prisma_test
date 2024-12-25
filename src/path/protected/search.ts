@@ -5,6 +5,6 @@ const __filename = fileURLToPath(import.meta.url)
 
 const __dirname = dirname(__filename)
 
-const adminPath = join(__dirname, '../../../views', 'protected', 'admin.html')
+const searchPath = join(__dirname, '../../../views', 'protected', 'search.html')
 
-export default adminPath
+export default searchPath
