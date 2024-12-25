@@ -18,18 +18,18 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
     const token = req.cookies?.aAuthToken
 
     if (!token) {
-        // Обновляем токен, если его нет
+        // Логика с обновлением access token через refresh token
         try {
             const { rAuthToken } = req.cookies
             if (!rAuthToken) {
                 return res.sendFile(loginPagePath)
             }
 
-            // Проверяем refresh token
+            // Проверка refresh token
             const decoded = jwt.verify(rAuthToken, JWT_REFRESH_SECRET) as any
             const userId = decoded.userId
 
-            // Ищем пользователя в базе данных
+            // Логика с верификацией пользователя
             const user = await prisma.user.findFirst({
                 where: { id: userId },
                 include: { info: true },
@@ -40,12 +40,13 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
                     .json({ message: 'User not found or invalid info' })
             }
 
-            // Создаем новый Access Token
+            // Генерация нового access token
             const newAccessToken = jwt.sign(
-                { userId: userId, role: user.info.role, login: user.login },
+                { userId, role: user.info.role, login: user.login },
                 JWT_SECRET,
                 { expiresIn: '1h' }
             )
+
             // Отправляем новый токен в cookies
             res.cookie('aAuthToken', newAccessToken, {
                 httpOnly: true,
@@ -53,45 +54,25 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
                 maxAge: 3600000, // 1 час
             })
 
-            // Переходим к следующему middleware
             return next()
         } catch (error: any) {
-            console.error(
-                'Error while refreshing token:',
-                error.message || error
-            )
+            console.error('Error refreshing token:', error.message || error)
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
-            res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
+            res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
             return res.status(500).json({ message: 'Token refresh failed' })
         }
     }
 
-    // Проверяем текущий access token
-    jwt.verify(token, JWT_SECRET, async (err: any, user: any) => {
+    // Верификация текущего access token
+    jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
         if (err) {
             console.log('Access token verification failed:', err.message)
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
-            res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
-            return res.sendStatus(403) // Ошибка токена
+            res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
+            return res.sendStatus(403) // Токен поврежден или просрочен
         }
-        const token = req.cookies?.aAuthToken
-        const decoded = jwt.verify(token, JWT_REFRESH_SECRET) as any
-        const userId = decoded.userId
-        const userCheck = await prisma.user.findFirst({
-            where: { id: userId },
-        })
-        if (!userCheck) {
-            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
-            res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
-            return res.status(500).send('Похоже, ваш аккаунт удален')
-        }
-        if (userCheck.ban !== 'no') {
-            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
-            res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
-            return res.status(500).send('Похоже, вы забанены')
-        }
-        req.user = user // Записываем декодированные данные в req.user
-        next() // Продолжаем выполнение, если авторизация прошла успешно
+        req.user = user
+        next()
     })
 }
 
