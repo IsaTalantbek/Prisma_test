@@ -4,8 +4,8 @@
     "main": "src/server.js",
     "type": "module",
     "scripts": {
-        "start": "node fix-imports.js && node dist/server.js",
-        "build": "npx tsc && npm run prisma",
+        "start": "npx tsc && node fix-imports.js && node dist/server.js",
+        "build": "npm run prisma",
         "prisma": "npx prisma migrate dev --name init && npx prisma generate"
     },
     "author": "isat",
