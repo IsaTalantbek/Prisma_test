@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import path from 'path'
-import refreshController from '../controllers/auth/refreshController.ts'
-import regPath from '../path/public/regPath.ts'
-import loginPath from '../path/public/loginPath.ts'
-import { redirectIfAuthenticated } from '../middleware/authMiddleware.ts'
+import refreshController from '../controllers/auth/refreshController'
+import regPath from '../path/public/regPath'
+import loginPath from '../path/public/loginPath'
+import { redirectIfAuthenticated } from '../middleware/authMiddleware'
 
 const __dirname = path.resolve()
 const router = Router()

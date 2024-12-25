@@ -13,18 +13,18 @@ function processFiles(dir) {
 
         if (fs.statSync(filePath).isDirectory()) {
             processFiles(filePath)
-        } else if (filePath.endsWith('.js')) {
+        } else if (filePath.endsWith('')) {
             let content = fs.readFileSync(filePath, 'utf8')
             content = content.replace(
-                /from\s+['"](.*)\.ts['"]/g,
+                /from\s+['"](.*)\.js['"]/g,
                 (match, p1) => {
-                    return `from '${p1}.js'`
+                    return `from '${p1}'`
                 }
             )
             content = content.replace(
-                /import\s+['"](.*)\.ts['"]/g,
+                /import\s+['"](.*)\.js['"]/g,
                 (match, p1) => {
-                    return `import '${p1}.js'`
+                    return `import '${p1}'`
                 }
             )
             fs.writeFileSync(filePath, content, 'utf8')

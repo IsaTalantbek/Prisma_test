@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import loginController from '../controllers/auth/loginController.ts'
-import regController from '../controllers/auth/regController.ts'
+import loginController from '../controllers/auth/loginController'
+import regController from '../controllers/auth/regController'
 
 const router = Router()
 

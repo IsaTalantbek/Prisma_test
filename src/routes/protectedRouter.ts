@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import path from 'path'
-import { checkRole } from '../middleware/authMiddleware.ts'
-import profileController from '../controllers/profile/profileController.ts'
-import postsController from '../controllers/posts/postsController.ts'
-import adminPath from '../path/protected/adminPath.ts'
-import searchPath from '../path/protected/search.ts'
+import { checkRole } from '../middleware/authMiddleware'
+import profileController from '../controllers/profile/profileController'
+import postsController from '../controllers/posts/postsController'
+import adminPath from '../path/protected/adminPath'
+import searchPath from '../path/protected/search'
 
 const __dirname = path.resolve()
 const router = Router()

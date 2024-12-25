@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import path from 'path'
 import { PrismaClient } from '@prisma/client'
-import loginPath from '../path/public/loginPath.ts'
-import errorPath from '../path/errorPath.ts'
+import loginPath from '../path/public/loginPath'
+import errorPath from '../path/errorPath'
 
 const prisma = new PrismaClient()
 

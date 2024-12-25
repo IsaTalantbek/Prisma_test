@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import fetchController from '../controllers/db/fetchController.ts'
+import fetchController from '../controllers/db/fetchController'
 
 const router = Router()
 

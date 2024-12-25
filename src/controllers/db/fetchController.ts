@@ -1,4 +1,4 @@
-import fetchDB from '../../service/fetchDB.ts'
+import fetchDB from '../../service/fetchDB'
 
 const fetchController = async (req: any, res: any) => {
     try {

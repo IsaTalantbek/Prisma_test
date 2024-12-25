@@ -2,11 +2,11 @@ import { Router, text } from 'express'
 import { PrismaClient } from '@prisma/client'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import checkInfo from '../../check/infoCheck.ts'
-import likeService from './service/likeService.ts'
-import dislikeService from './service/dislikeService.ts'
-import createPostPath from '../../path/posts/createPath.ts'
-import createPostService from './service/createService.ts'
+import checkInfo from '../../check/infoCheck'
+import likeService from './service/likeService'
+import dislikeService from './service/dislikeService'
+import createPostPath from '../../path/posts/createPath'
+import createPostService from './service/createService'
 
 dotenv.config()
 
