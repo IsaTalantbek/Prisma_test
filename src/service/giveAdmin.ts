@@ -23,8 +23,8 @@ const adminGive = async (req: any, res: any) => {
             where: { userId: userId },
             data: { role: 'admin' },
         })
-
-        return res.send('User role updated to admin')
+        res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
+        return res.redirect('/a/admin')
     } catch (err) {
         console.log('Error:', err)
         return res.status(403).send('Access token verification failed') // Ошибка токена или базы данных
