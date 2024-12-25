@@ -70,10 +70,12 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
     jwt.verify(token, JWT_SECRET, async (err: any, user: any) => {
         if (err) {
             console.log('Access token verification failed:', err.message)
+            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
+            res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
             return res.sendStatus(403) // Ошибка токена
         }
-        const aAuthToken = req.cookies
-        const decoded = jwt.verify(aAuthToken, JWT_REFRESH_SECRET) as any
+        const token = req.cookies?.aAuthToken
+        const decoded = jwt.verify(token, JWT_REFRESH_SECRET) as any
         const userId = decoded.userId
         const userCheck = await prisma.user.findFirst({
             where: { id: userId },
