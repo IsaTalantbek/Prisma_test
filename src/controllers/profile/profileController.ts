@@ -141,9 +141,9 @@ router.post('/update', async (req: any, res: any) => {
     if (!(await checkGender(gender))) {
         return res.status(400).json({ message: 'Invalid gender' })
     }
-    console.log(username, info, age, gender)
+
     const token = req.cookies['aAuthToken']
-    console.log(token)
+
     if (!token) {
         return res
             .status(500)
@@ -161,7 +161,7 @@ router.post('/update', async (req: any, res: any) => {
             // Доступ к данным из токена
 
             const userId = decoded.userId
-            console.log(userId)
+
             const result = await prisma.info.update({
                 where: { userId: userId },
                 data: {
@@ -170,7 +170,6 @@ router.post('/update', async (req: any, res: any) => {
                     gender,
                 },
             })
-            console.log(result)
 
             const result1 = await prisma.user.update({
                 where: { id: userId },
@@ -179,11 +178,9 @@ router.post('/update', async (req: any, res: any) => {
                 },
             })
 
-            console.log(result1)
             if (!result1 || !result) {
                 return res.status(500).json({ message: 'Ошибка изменения' })
             }
-            console.log('hey')
             res.status(200).json({ message: 'Сохранено' })
         })
     } catch (error: any) {

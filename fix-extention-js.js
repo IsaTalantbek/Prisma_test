@@ -1,9 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 
-// Указываем путь к директории с вашими скомпилированными файлами
-const distDirectory = path.resolve(process.cwd(), 'dist')
-
 // Функция для обработки всех файлов в директории, включая подкаталоги
 async function processDirectory(directory) {
     try {
@@ -54,5 +51,7 @@ async function processDirectory(directory) {
     }
 }
 
+// Указываем путь к директории с вашими скомпилированными файлами
+const distDirectory = path.resolve(process.cwd(), 'dist')
 // Запуск функции для добавления расширений .js к путям импортов в директории dist
 processDirectory(distDirectory)

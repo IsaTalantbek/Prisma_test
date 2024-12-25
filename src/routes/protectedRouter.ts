@@ -1,19 +1,16 @@
 import { Router } from 'express'
-import path from 'path'
 import { checkRole } from '../middleware/authMiddleware'
 import profileController from '../controllers/profile/profileController'
 import postsController from '../controllers/posts/postsController'
 import adminPath from '../path/protected/adminPath'
 import searchPath from '../path/protected/search'
+import adminRouter from './adminRouter'
 
-const __dirname = path.resolve()
 const router = Router()
 
 // Маршрут для главной страницы
 router.get('/main')
-router.get('/admin-panel', checkRole('admin'), (req, res) => {
-    res.sendFile(adminPath)
-})
+router.use('/admin', checkRole('admin'), adminRouter)
 router.get('/search', (req, res) => {
     res.sendFile(searchPath)
 })

@@ -78,7 +78,7 @@ router.delete('/:id/delete', async (req: any, res: any) => {
 
             await prisma.info.update({
                 where: { userId: thisId },
-                data: { postCount: { increment: 1 } },
+                data: { postCount: { decrement: 1 } },
             })
 
             // Удаляем сам пост

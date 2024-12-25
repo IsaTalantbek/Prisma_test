@@ -110,17 +110,17 @@
             </div>
 
             <div class="form-group">
-                <h2>Изменить</h2>
-                <input type="text" id="update-column" placeholder="Column" />
+                <h2>Изменить пост</h2>
                 <input type="text" id="update-value" placeholder="Value" />
                 <input type="number" id="update-id" placeholder="ID" />
                 <button id="update-button">Изменить</button>
             </div>
 
             <div class="form-group">
-                <h2>Удалить</h2>
+                <h2>Забанить/Удалить пост</h2>
                 <input type="number" id="delete-id" placeholder="ID" />
-                <button id="delete-button">Удалить</button>
+                <input type="string" id="type" placeholder="user/post" />
+                <button id="delete-button">Забанить/Удалить пост</button>
             </div>
 
             <div class="form-group">
@@ -130,7 +130,7 @@
                 <input
                     type="text"
                     id="get-table"
-                    placeholder="Table(default 'user')"
+                    placeholder="user/info/post"
                 />
                 <button id="get-button">Получить</button>
             </div>
@@ -141,7 +141,7 @@
         </div>
 
         <script>
-            const apiUrl = '/api/db' // Путь к серверу
+            const apiUrl = '/a/admin/api' // Путь к серверу
 
             // Функция для создания пользователя
             async function createUser() {
@@ -175,11 +175,10 @@
 
             // Функция для обновления пользователя
             async function updateUser() {
-                const column = document.getElementById('update-column').value
                 const value = document.getElementById('update-value').value
                 const id = document.getElementById('update-id').value
 
-                if (!column || !value || !id) {
+                if (!value || !id) {
                     console.log({ error: 'Пожалуйста, заполните все поля!' })
                     return
                 }
@@ -190,7 +189,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ column, value, id }),
+                        body: JSON.stringify({ value, id }),
                         credentials: 'include', // Эта строка гарантирует передачу куки
                     })
                     if (!response.ok) {

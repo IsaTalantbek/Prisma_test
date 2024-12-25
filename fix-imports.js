@@ -3,8 +3,6 @@ import path from 'path'
 
 const __dirname = path.resolve()
 
-const directory = path.resolve(__dirname, 'dist') // Укажите здесь выходную папку компиляции
-
 function processFiles(dir) {
     const files = fs.readdirSync(dir)
 
@@ -13,7 +11,7 @@ function processFiles(dir) {
 
         if (fs.statSync(filePath).isDirectory()) {
             processFiles(filePath)
-        } else if (filePath.endsWith('')) {
+        } else if (filePath.endsWith('js')) {
             let content = fs.readFileSync(filePath, 'utf8')
             content = content.replace(
                 /from\s+['"](.*)\.js['"]/g,
@@ -33,5 +31,6 @@ function processFiles(dir) {
     }
 }
 
+const directory = path.resolve(__dirname, 'dist') // Укажите здесь выходную папку компиляции
 processFiles(directory)
 console.log('Import updates completed!')

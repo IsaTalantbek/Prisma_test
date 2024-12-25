@@ -41,7 +41,6 @@ async function createDB({
         })
 
         if (existingUser) {
-            console.log('User already exists')
             return { message: 'create-userexist-500' }
         }
 

@@ -163,6 +163,9 @@
 
       <!-- Кнопка сохранения изменений -->
       <button id="save-profile">Сохранить изменения</button>
+
+      <!-- Кнопка выйти -->
+      <button id="logout">Выйти</button>
     </div>
   </div>
 
@@ -206,7 +209,11 @@
       });
 
     });
+
+    // Обработчик нажатия кнопки "Выйти"
+    document.getElementById('logout').addEventListener('click', function() {
+      window.location.href = '/logout'; // Перенаправление на страницу выхода
+    });
   </script>
 </body>
-
 </html>

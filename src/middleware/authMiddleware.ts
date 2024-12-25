@@ -8,7 +8,6 @@ import errorPath from '../path/errorPath'
 const prisma = new PrismaClient()
 
 dotenv.config()
-const __dirname = path.resolve()
 const loginPagePath = loginPath
 const errorPage = errorPath
 
@@ -66,10 +65,26 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
     }
 
     // Проверяем текущий access token
-    jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
+    jwt.verify(token, JWT_SECRET, async (err: any, user: any) => {
         if (err) {
             console.log('Access token verification failed:', err.message)
             return res.sendStatus(403) // Ошибка токена
+        }
+        const aAuthToken = req.cookies
+        const decoded = jwt.verify(aAuthToken, JWT_REFRESH_SECRET) as any
+        const userId = decoded.userId
+        const userCheck = await prisma.user.findFirst({
+            where: { id: userId },
+        })
+        if (!userCheck) {
+            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
+            res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
+            return res.status(500).send('Похоже, ваш аккаунт удален')
+        }
+        if (userCheck.ban !== 'no') {
+            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
+            res.clearCookie('rAuthToken', { httpOnly: true, secure: true }) // Если ваш сайт использует HTTPS, добавьте secure: true
+            return res.status(500).send('Похоже, вы забанены')
         }
         req.user = user // Записываем декодированные данные в req.user
         next() // Продолжаем выполнение, если авторизация прошла успешно
