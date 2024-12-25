@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 type UserInfoData = {
@@ -43,7 +44,7 @@ async function createDB({
         if (existingUser) {
             return { message: 'create-userexist-500' }
         }
-
+        password = await bcrypt.hash(password, 10)
         // Создаем пользователя
         const user = await prisma.user.create({
             data: {

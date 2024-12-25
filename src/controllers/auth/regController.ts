@@ -4,7 +4,6 @@ import checkInfo from '../../check/infoCheck'
 import checkLogin from '../../check/loginCheck'
 import checkPassword from '../../check/passwordCheck'
 import checkGender from '../../check/genderCheck'
-import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
@@ -42,7 +41,6 @@ const regController = async (req: any, res: any) => {
         if (username && !(await checkLogin(username))) {
             return res.status(400).json({ message: 'invalid-username-400' })
         }
-        password = await bcrypt.hash(password, 10)
 
         const result = await createDB({
             login,
