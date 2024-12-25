@@ -63,6 +63,16 @@
       color: #777;
     }
 
+    .profile-stats {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .profile-stats p {
+      font-size: 14px;
+      color: #555;
+    }
+
     textarea {
       width: 100%;
       margin: 10px 0;
@@ -113,7 +123,7 @@
     <div class="sidebar">
       <ul>
         <li><a href="/a/search">Поиск</a></li>
-        <li><a href="/a/posts">Посты</a></li>
+        <li><a href="/a/main">Посты</a></li>
         <li><a href="/a/profile">Профиль</a></li>
       </ul>
     </div>
@@ -124,6 +134,13 @@
       <div class="username-container">
         <h2 id="username"><%= username %></h2>
         <p id="login"><%= login %></p>
+      </div>
+
+      <!-- Статистика профиля -->
+      <div class="profile-stats">
+        <p>Лайки: <%= likes %></p>
+        <p>Дизлайки: <%= dislikes %></p>
+        <p>Посты: <%= postsCount %></p>
       </div>
 
       <!-- Большое окошко для текста -->

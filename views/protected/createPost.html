@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Создание Поста</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            .container {
+                display: flex;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 200px;
+                background-color: #f4f4f4;
+                padding: 20px;
+            }
+
+            .sidebar ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .sidebar li {
+                margin: 15px 0;
+            }
+
+            .sidebar a {
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+            }
+
+            .sidebar a:hover {
+                color: #007bff;
+            }
+
+            .main-content {
+                flex-grow: 1;
+                padding: 20px;
+                background-color: #fff;
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            .post-form {
+                max-width: 500px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                display: block;
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .form-group textarea {
+                height: 120px;
+                resize: none;
+            }
+
+            .char-count {
+                font-size: 12px;
+                text-align: right;
+                color: #888;
+            }
+
+            .btn-submit {
+                padding: 10px 20px;
+                background-color: #28a745;
+                color: white;
+                font-weight: bold;
+                border: none;
+                border-radius: 4px;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .btn-submit:hover {
+                background-color: #218838;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="sidebar">
+                <ul>
+                    <li><a href="/a/search">Поиск</a></li>
+                    <li><a href="/a/main">Посты</a></li>
+                    <li><a href="/a/profile">Профиль</a></li>
+                </ul>
+            </div>
+
+            <div class="main-content">
+                <h1>Создание Поста</h1>
+
+                <div class="post-form">
+                    <form id="create-post-form">
+                        <div class="form-group">
+                            <label for="post-text"
+                                >Текст поста (макс. 250 символов):</label
+                            >
+                            <textarea
+                                id="post-text"
+                                name="text"
+                                maxlength="250"
+                                required
+                            ></textarea>
+                            <div class="char-count" id="char-count">0/250</div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            Создать пост
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const textarea = document.getElementById('post-text')
+            const charCount = document.getElementById('char-count')
+            const form = document.getElementById('create-post-form')
+
+            textarea.addEventListener('input', () => {
+                const currentLength = textarea.value.length
+                charCount.textContent = `${currentLength}/250`
+            })
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault() // Остановим стандартную отправку формы
+
+                const postText = textarea.value
+
+                // Отправим POST-запрос с использованием Fetch
+                try {
+                    const response = await fetch('/a/main/createPost', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text: postText }), // Отправляем текст как JSON
+                    })
+
+                    const result = await response.json() // Получаем ответ от сервера
+                    if (response.ok) {
+                        alert('Пост успешно создан!')
+                        window.location = '/a/main'
+                    } else {
+                        alert(
+                            `Ошибка: ${result.message || 'Неизвестная ошибка'}`
+                        )
+                    }
+                } catch (error) {
+                    console.error('Ошибка при отправке поста:', error)
+                    alert('Ошибка при отправке поста')
+                }
+            })
+        </script>
+    </body>
+</html>

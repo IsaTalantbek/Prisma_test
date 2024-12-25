@@ -13,9 +13,8 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'secret-refresh'
 
 const refreshController = async (req: any, res: any) => {
     try {
-        console.log('refresh')
         const { rAuthToken } = req.cookies
-        console.log(rAuthToken)
+
         if (!rAuthToken) {
             return res.status(401).json({ message: 'refresh-notfound-401' })
         }
@@ -32,11 +31,11 @@ const refreshController = async (req: any, res: any) => {
                 info: true, // Это включит информацию о пользователе вместе с данными из таблицы Info
             },
         })
-        console.log(result)
+
         if (!result) {
             return res.status(500).json({ message: 'refresh-notexist-500' })
         }
-        console.log(result.info)
+
         if (!result.info) {
             return res.status(500).json({ message: 'refresh-notexist-500' })
         }

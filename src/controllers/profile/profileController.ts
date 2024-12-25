@@ -2,10 +2,10 @@ import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import checkLogin from '../../check/loginCheck'
-import checkInfo from '../../check/infoCheck'
-import checkAge from '../../check/ageCheck'
-import checkGender from '../../check/genderCheck'
+import checkLogin from '../../check/loginCheck.ts'
+import checkInfo from '../../check/infoCheck.ts'
+import checkAge from '../../check/ageCheck.ts'
+import checkGender from '../../check/genderCheck.ts'
 
 dotenv.config()
 
@@ -16,7 +16,6 @@ const prisma = new PrismaClient()
 const router = Router()
 
 router.get('/', async (req: any, res: any) => {
-    console.log('profile')
     const token = req.cookies['aAuthToken']
     if (!token) {
         return res.status(401).send('Непредвиденная ошибка, обновите страницу')
@@ -49,6 +48,9 @@ router.get('/', async (req: any, res: any) => {
                 info: user.info.info,
                 gender: user.info.gender,
                 age: user.info.age,
+                likes: user.info.likes,
+                dislikes: user.info.dislikes,
+                postsCount: user.info.postCount,
             })
         })
     } catch (error: any) {

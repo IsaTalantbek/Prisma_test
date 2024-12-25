@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import authRouter from './authRouter'
-import DbRouter from './dbRouter'
-import { authenticateToken, checkRole } from '../middleware/authMiddleware'
+import authRouter from './authRouter.ts'
+import DbRouter from './dbRouter.ts'
+import { authenticateToken, checkRole } from '../middleware/authMiddleware.ts'
 
 const router = Router()
 

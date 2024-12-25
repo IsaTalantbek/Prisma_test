@@ -1,9 +1,9 @@
-import createDB from '../../service/createDB'
-import checkAge from '../../check/ageCheck'
-import checkInfo from '../../check/infoCheck'
-import checkLogin from '../../check/loginCheck'
-import checkPassword from '../../check/passwordCheck'
-import checkGender from '../../check/genderCheck'
+import createDB from '../../service/createDB.ts'
+import checkAge from '../../check/ageCheck.ts'
+import checkInfo from '../../check/infoCheck.ts'
+import checkLogin from '../../check/loginCheck.ts'
+import checkPassword from '../../check/passwordCheck.ts'
+import checkGender from '../../check/genderCheck.ts'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
@@ -16,7 +16,7 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'secret-refresh' //
 const regController = async (req: any, res: any) => {
     try {
         let { login, password, username, age, info, gender } = req.body
-        console.log(req.body) // Для проверки, что приходит с клиента
+        console.log(req.body)
         if (!login || !password) {
             return res
                 .status(400)

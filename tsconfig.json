@@ -7,11 +7,13 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "allowSyntheticDefaultImports": true,
-        "noEmit": false,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
         "skipLibCheck": true,
         "resolveJsonModule": true,
-        "isolatedModules": true
-    }
+        "isolatedModules": true,
+        "declaration": false
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
 }

@@ -1,14 +1,17 @@
-import { Router } from 'express'
-import path from 'path'
-import refreshController from '../controllers/auth/refreshController.js'
-const __dirname = path.resolve()
-const router = Router()
+import { Router } from 'express';
+import path from 'path';
+import refreshController from '../controllers/auth/refreshController.js';
+import regPath from '../path/public/regPath.js';
+import loginPath from '../path/public/loginPath.js';
+import { redirectIfAuthenticated } from '../middleware/authMiddleware.js';
+const __dirname = path.resolve();
+const router = Router();
 // Маршрут для главной страницы
-router.get('/reg', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'reg.html'))
-})
-router.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'))
-})
-router.get('/refresh-auth', refreshController)
-export default router
+router.get('/reg', redirectIfAuthenticated, (req, res) => {
+    res.sendFile(regPath);
+});
+router.get('/login', redirectIfAuthenticated, (req, res) => {
+    res.sendFile(loginPath);
+});
+router.get('/refresh-auth', refreshController);
+export default router;

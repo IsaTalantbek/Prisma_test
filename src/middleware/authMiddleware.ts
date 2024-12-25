@@ -2,13 +2,15 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import path from 'path'
 import { PrismaClient } from '@prisma/client'
+import loginPath from '../path/public/loginPath.ts'
+import errorPath from '../path/errorPath.ts'
 
 const prisma = new PrismaClient()
 
 dotenv.config()
 const __dirname = path.resolve()
-const loginPagePath = path.join(__dirname, 'src', 'views', 'login.html')
-const errorPage = path.join(__dirname, 'src', 'views', 'error.html')
+const loginPagePath = loginPath
+const errorPage = errorPath
 
 const JWT_SECRET = process.env.JWT_SECRET || 'hello-WORLD-im-from-B'
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'secret-refresh'
@@ -17,8 +19,6 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
     const token = req.cookies?.aAuthToken
 
     if (!token) {
-        console.log('No access token found')
-
         // Обновляем токен, если его нет
         try {
             const { rAuthToken } = req.cookies
@@ -47,7 +47,6 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
                 JWT_SECRET,
                 { expiresIn: '1h' }
             )
-            console.log(newAccessToken)
             // Отправляем новый токен в cookies
             res.cookie('aAuthToken', newAccessToken, {
                 httpOnly: true,

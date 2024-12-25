@@ -161,15 +161,27 @@
                     body: JSON.stringify({ login, password }),
                 })
                     .then((response) => {
-                        if (response.ok) {
-                            window.location = '/a/main'
-                        } else {
-                            alert('Ошибка при регистрации. Попробуйте снова.')
+                        if (!response.ok) {
+                            // Обрабатываем ошибки статуса (например, 400, 500)
+                            return response.json().then((data) => {
+                                throw new Error(data.message || 'Server error')
+                            })
                         }
+
+                        // Проверяем данные ответа
+                        return response.json().then((data) => {
+                            if (
+                                data.message &&
+                                data.message.includes('create-userexist-500')
+                            ) {
+                                throw new Error('Данный логин занят')
+                            }
+                            window.location = '/a/main' // Если всё ок, возвращаем данные
+                        })
                     })
                     .catch((error) => {
-                        console.error('Ошибка:', error)
-                        alert('Произошла ошибка. Попробуйте позже.')
+                        alert(error.message)
+                        location.reload()
                     })
             })
 
@@ -196,15 +208,27 @@
                     }),
                 })
                     .then((response) => {
-                        if (response.ok) {
-                            window.location = '/a/main'
-                        } else {
-                            alert(response.message)
+                        if (!response.ok) {
+                            // Обрабатываем ошибки статуса (например, 400, 500)
+                            return response.json().then((data) => {
+                                throw new Error(data.message || 'Server error')
+                            })
                         }
+
+                        // Проверяем данные ответа
+                        return response.json().then((data) => {
+                            if (
+                                data.message &&
+                                data.message.includes('create-userexist-500')
+                            ) {
+                                throw new Error('Данный логин занят')
+                            }
+                            window.location = '/a/main' // Если всё ок, возвращаем данные
+                        })
                     })
                     .catch((error) => {
-                        console.error('Ошибка:', error)
-                        alert('Произошла ошибка. Попробуйте позже.')
+                        alert(error.message)
+                        location.reload()
                     })
             })
 

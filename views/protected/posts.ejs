@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Меню Постов</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            .container {
+                display: flex;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 200px;
+                background-color: #f4f4f4;
+                padding: 20px;
+            }
+
+            .sidebar ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .sidebar li {
+                margin: 15px 0;
+            }
+
+            .sidebar a {
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+            }
+
+            .sidebar a:hover {
+                color: #007bff;
+            }
+
+            .main-content {
+                flex-grow: 1;
+                padding: 20px;
+                background-color: #fff;
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            .post {
+                margin-bottom: 30px;
+                padding: 15px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .post .username-container {
+                margin-bottom: 10px;
+            }
+
+            .post .username-container a {
+                text-decoration: none;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .post .username-container a:hover {
+                color: #007bff;
+            }
+
+            .post .likes-dislikes {
+                margin-top: 10px;
+            }
+
+            .post .likes-dislikes p {
+                font-size: 14px;
+                margin: 5px 0;
+            }
+
+            .like-btn,
+            .dislike-btn {
+                cursor: pointer;
+                padding: 5px 10px;
+                margin-right: 5px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .like-btn:hover,
+            .dislike-btn:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .like-btn.active,
+            .dislike-btn.active {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .btn-add {
+                padding: 10px 20px;
+                background-color: #28a745;
+                color: white;
+                font-weight: bold;
+                border: none;
+                border-radius: 4px;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            .btn-add:hover {
+                background-color: #218838;
+            }
+
+            .btn-delete {
+                padding: 5px 10px;
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .btn-delete:hover {
+                background-color: #c82333;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="sidebar">
+                <ul>
+                    <li><a href="/a/search">Поиск</a></li>
+                    <li><a href="/a/main">Посты</a></li>
+                    <li><a href="/a/profile">Профиль</a></li>
+                </ul>
+                <a href="/a/main/create" class="btn-add">Добавить пост</a>
+                <!-- Кнопка добавления поста -->
+            </div>
+
+            <div class="main-content">
+                <h1>Меню Постов</h1>
+
+                <% posts.forEach(post => { %>
+                <div class="post" id="post-<%= post.id %>">
+                    <div class="username-container">
+                        <a href="/profile?id=<%= post.userId %>">
+                            <%= post.user.username %>
+                        </a>
+                    </div>
+                    <p><%= post.text %></p>
+
+                    <div class="likes-dislikes">
+                        <button
+                            class="like-btn"
+                            id="like-<%= post.id %>"
+                            data-id="<%= post.id %>"
+                        >
+                            👍 <%= post.likes %>
+                        </button>
+                        <button
+                            class="dislike-btn"
+                            id="dislike-<%= post.id %>"
+                            data-id="<%= post.id %>"
+                        >
+                            👎 <%= post.dislikes %>
+                        </button>
+                    </div>
+
+                    <% if (post.userId === thisId) { %>
+                    <!-- Если userId поста совпадает с текущим пользователем (thisId), показываем кнопку удаления -->
+                    <button class="btn-delete" data-id="<%= post.id %>">
+                        Удалить
+                    </button>
+                    <% } %>
+                </div>
+                <% }); %>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const likeButtons = document.querySelectorAll('.like-btn')
+                const dislikeButtons = document.querySelectorAll('.dislike-btn')
+                const deleteButtons = document.querySelectorAll('.btn-delete')
+
+                likeButtons.forEach((button) => {
+                    button.addEventListener('click', async () => {
+                        const postId = button.dataset.id
+                        const response = await fetch(`/a/main/${postId}/like`, {
+                            method: 'POST',
+                        })
+
+                        if (response.ok) {
+                            updateLikeDislike(postId, button, 'like')
+                            location.reload()
+                        } else {
+                            alert('Не удалось добавить лайк')
+                        }
+                    })
+                })
+
+                dislikeButtons.forEach((button) => {
+                    button.addEventListener('click', async () => {
+                        const postId = button.dataset.id
+                        const response = await fetch(
+                            `/a/main/${postId}/dislike`,
+                            {
+                                method: 'POST',
+                            }
+                        )
+
+                        if (response.ok) {
+                            updateLikeDislike(postId, button, 'dislike')
+                            location.reload()
+                        } else {
+                            alert('Не удалось добавить дизлайк')
+                        }
+                    })
+                })
+
+                // Обработчик для кнопок удаления
+                deleteButtons.forEach((button) => {
+                    button.addEventListener('click', async () => {
+                        const postId = button.dataset.id
+                        const response = await fetch(
+                            `/a/main/${postId}/delete`,
+                            {
+                                method: 'DELETE',
+                            }
+                        )
+
+                        if (response.ok) {
+                            // Удаляем пост из UI после успешного запроса
+                            const postElement = document.getElementById(
+                                `post-${postId}`
+                            )
+                            location.reload()
+                        } else {
+                            alert('Не удалось удалить пост')
+                        }
+                    })
+                })
+
+                function updateLikeDislike(postId, button, type) {
+                    const post = document.getElementById(`post-${postId}`)
+                    const likesCount = post.querySelector('.like-btn')
+                    const dislikesCount = post.querySelector('.dislike-btn')
+
+                    if (type === 'like') {
+                        likesCount.innerText =
+                            '👍 ' +
+                            (parseInt(likesCount.innerText.split(' ')[1]) + 1)
+                        dislikesCount.classList.remove('active')
+                        likesCount.classList.add('active')
+                    } else if (type === 'dislike') {
+                        dislikesCount.innerText =
+                            '👎 ' +
+                            (parseInt(dislikesCount.innerText.split(' ')[1]) +
+                                1)
+                        likesCount.classList.remove('active')
+                        dislikesCount.classList.add('active')
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
