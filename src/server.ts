@@ -9,7 +9,7 @@ import errorHandler from './middleware/errorMiddleware'
 import path from 'path'
 import protectedPath from './path/protected'
 import errorPath from './path/errorPath'
-import adminGive from './service/giveAdmib'
+import adminGive from './service/giveAdmin'
 dotenv.config()
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 10000

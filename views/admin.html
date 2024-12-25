@@ -119,7 +119,7 @@
             <div class="form-group">
                 <h2>Забанить/Удалить пост</h2>
                 <input type="number" id="delete-id" placeholder="ID" />
-                <input type="string" id="type" placeholder="user/post" />
+                <input type="string" id="type-delete" placeholder="user/post" />
                 <button id="delete-button">Забанить/Удалить пост</button>
             </div>
 
@@ -205,14 +205,17 @@
             // Функция для удаления пользователя
             async function deleteUser() {
                 const id = document.getElementById('delete-id').value
-
+                const type = document.getElementById('type-delete').value
                 if (!id) {
                     console.log({ error: 'Пожалуйста, укажите ID!' })
                     return
                 }
+                const queryParams = new URLSearchParams()
+                if (id) queryParams.append('id', id)
+                if (type) queryParams.append('table', type)
 
                 try {
-                    const response = await fetch(`${apiUrl}/${id}`, {
+                    const response = await fetch(`${apiUrl}/${queryParams}`, {
                         method: 'DELETE',
                         credentials: 'include', // Эта строка гарантирует передачу куки
                     })
@@ -246,7 +249,7 @@
                         console.log(`Ошибка: ${response.status}`)
                     }
                     const result = await response.json()
-                    console.table(result.data.result) // Отображаем результат в виде таблицы в консоли
+                    console.table(result.result) // Отображаем результат в виде таблицы в консоли
                 } catch (error) {
                     console.error('Ошибка при получении пользователя:', error)
                 }

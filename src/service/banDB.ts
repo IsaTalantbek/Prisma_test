@@ -7,6 +7,21 @@ const banDB = async (id: number | string) => {
         if (typeof id !== 'number') {
             id = parseInt(id, 10)
         }
+
+        const check = await prisma.user.findFirst({
+            where: { id: id },
+        })
+
+        if (!check) {
+            return 'ban-user-not-defined'
+        }
+        if (check.ban === 'yes') {
+            const result = await prisma.user.update({
+                where: { id: id },
+                data: { ban: 'no' },
+            })
+            return result
+        }
         const result = await prisma.user.update({
             where: { id: id },
             data: { ban: 'yes' },
