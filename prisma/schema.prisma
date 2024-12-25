@@ -17,7 +17,7 @@ model User {
   createdAt DateTime  @default(now())
   info      Info?     @relation("UserInfo", fields: [infoId], references: [id])
   infoId    Int?      @unique
-  ban       String @default("no")
+  ban       String  @default("no")
   Post Post[]
 
   Like Like[]
