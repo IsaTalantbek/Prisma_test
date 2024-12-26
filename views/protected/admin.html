@@ -246,7 +246,7 @@
                         credentials: 'include', // Эта строка гарантирует передачу куки
                     })
                     if (!response.ok) {
-                        console.log(`Ошибка: ${response.status}`)
+                        console.log(`Ошибка: ${response.messsage}`)
                     }
                     const result = await response.json()
                     console.table(result.result) // Отображаем результат в виде таблицы в консоли
