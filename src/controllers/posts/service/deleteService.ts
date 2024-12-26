@@ -32,8 +32,12 @@ const deleteService = async (
     await prisma.post.delete({ where: { id: postId } })
 
     await prisma.info.update({
-        where: { userId: thisId },
-        data: { postCount: { decrement: 1 } },
+        where: { userId: post.infoId },
+        data: {
+            postCount: { decrement: 1 },
+            likes: { decrement: post.likes },
+            dislikes: { decrement: post.dislikes },
+        },
     })
     return true
 }

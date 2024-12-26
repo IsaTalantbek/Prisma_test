@@ -28,14 +28,18 @@ const deleteController = async (req: any, res: any) => {
             await prisma.like.deleteMany({
                 where: { postId: id },
             })
+            await prisma.info.update({
+                where: { id: user.infoId },
+                data: {
+                    likes: { decrement: user.likes },
+                    dislikes: { decrement: user.dislikes },
+                    postCount: { decrement: 1 },
+                },
+            })
             const result = await prisma.post.delete({
                 where: { id: id },
             })
 
-            await prisma.info.update({
-                where: { id: user.infoId },
-                data: { postCount: { decrement: 1 } },
-            })
             return res.status(200).json({ result })
         }
         return res.status(500).json({ message: 'deleteAdmin-invalid-500' })
