@@ -19,11 +19,10 @@ const deleteController = async (req: any, res: any) => {
         } else if (table === 'post') {
             const user = await prisma.post.findFirst({
                 where: { id: id },
-                include: { info: true },
             })
             if (!user) {
                 return res
-                    .status(500)
+                    .status(404)
                     .json({ message: 'незнаю как, но у поста нет создателя' })
             }
             await prisma.like.deleteMany({
@@ -34,7 +33,7 @@ const deleteController = async (req: any, res: any) => {
             })
 
             await prisma.info.update({
-                where: { userId: user.info.likes },
+                where: { id: user.infoId },
                 data: { postCount: { decrement: 1 } },
             })
             return res.status(200).json({ result })
