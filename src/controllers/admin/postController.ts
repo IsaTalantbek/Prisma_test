@@ -17,6 +17,9 @@ const postController = async (req: any, res: any) => {
                 message: `неправильные значения`,
             })
         }
+        if (result.message) {
+            return res.status(500).json({ result })
+        }
         return res.status(200).json({
             result,
         })

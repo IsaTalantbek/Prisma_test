@@ -164,10 +164,10 @@
                         credentials: 'include', // Эта строка гарантирует передачу куки
                     })
                     if (!response.ok) {
-                        console.log(`Ошибка: ${response.status}`)
+                        console.log(`Ошибка: ${response.message}`)
                     }
                     const result = await response.json()
-                    console.table(result.data.result)
+                    console.table(result.result)
                 } catch (error) {
                     console.error('Ошибка при создании пользователя:', error)
                 }
@@ -193,7 +193,7 @@
                         credentials: 'include', // Эта строка гарантирует передачу куки
                     })
                     if (!response.ok) {
-                        console.log(`Ошибка: ${response.status}`)
+                        console.log(`Ошибка: ${response.message}`)
                     }
                     const result = await response.json()
                     console.log('Пользователь обновлен:', result)
@@ -223,7 +223,7 @@
                         console.log(`Ошибка: ${response.status}`)
                     }
                     const result = await response.json()
-                    console.log('Пользователь удален:', result)
+                    console.log('Пост удален/Пользователь забанен:', result)
                 } catch (err) {
                     console.error('Ошибка при удалении пользователя:', err)
                 }
