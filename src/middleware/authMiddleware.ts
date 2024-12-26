@@ -79,7 +79,7 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
         if (!check) {
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
             res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
-            return res.send('Вашего аккаунта не существует')
+            return res.redirect('/reg')
         }
         if (check.ban === 'yes') {
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
@@ -94,7 +94,7 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
 export const checkRole = (role: string) => {
     return (req: any, res: any, next: any) => {
         if (!req.user) {
-            return res.sendStatus(403) // Если нет пользователя, отправляем ошибку
+            return res.redirect('/reg') // Если нет пользователя, отправляем ошибку
         }
         if (req.user.role !== role) {
             // Если роль пользователя не соответствует ожидаемой, отправляем страницу ошибки
