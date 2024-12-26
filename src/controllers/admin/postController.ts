@@ -2,7 +2,7 @@ import createDB from '../../service/createDB'
 
 const postController = async (req: any, res: any) => {
     try {
-        const { login, password } = req.query
+        const { login, password } = req.body
 
         if (typeof login !== 'string' || typeof password !== 'string') {
             return res

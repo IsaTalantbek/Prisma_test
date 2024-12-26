@@ -4,8 +4,7 @@ const prisma = new PrismaClient()
 
 const putController = async (req: any, res: any) => {
     try {
-        const { value, id } = req.query
-
+        const { value, id } = req.body
         const result = await prisma.post.update({
             where: { id: id },
             data: { text: value },

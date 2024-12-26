@@ -64,12 +64,27 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
     }
 
     // Верификация текущего access token
-    jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
+    jwt.verify(token, JWT_SECRET, async (err: any, user: any) => {
         if (err) {
             console.log('Access token verification failed:', err.message)
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
             res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
             return res.redirect('/reg')
+        }
+        const decoded = jwt.verify(token, JWT_SECRET) as any
+        const userId = decoded.userId
+        const check = await prisma.user.findFirst({
+            where: { id: userId },
+        })
+        if (!check) {
+            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
+            res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
+            return res.send('Вашего аккаунта не существует')
+        }
+        if (check.ban === 'yes') {
+            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
+            res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
+            return res.send('Похоже, вы забанены^_^')
         }
         req.user = user
         next()

@@ -7,13 +7,33 @@
         <style>
             body {
                 font-family: Arial, sans-serif;
+                background-color: #f4f4f9;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
             }
             .container {
                 max-width: 400px;
-                margin: 0 auto;
-                padding: 20px;
+                width: 100%;
+                margin: 20px;
+                padding: 25px;
                 border: 1px solid #ccc;
                 border-radius: 10px;
+                background-color: #fff;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            h2 {
+                text-align: center;
+                color: #333;
+            }
+            label {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 5px;
+                display: block;
             }
             input,
             textarea,
@@ -23,14 +43,19 @@
                 padding: 10px;
                 border-radius: 5px;
                 border: 1px solid #ccc;
+                font-size: 14px;
+                box-sizing: border-box;
             }
             button {
+                width: 100%;
                 background-color: #4caf50;
                 color: white;
-                padding: 10px 20px;
+                padding: 12px 20px;
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
+                font-size: 16px;
+                transition: background-color 0.3s ease;
             }
             button:hover {
                 background-color: #45a049;
@@ -41,10 +66,24 @@
             .slider-container {
                 display: flex;
                 flex-direction: column;
+                margin-top: 10px;
             }
             .slider-value {
                 text-align: center;
                 font-weight: bold;
+                margin-top: 8px;
+                color: #333;
+            }
+            .already-account {
+                text-align: center;
+                margin-top: 15px;
+            }
+            .already-account a {
+                color: #4caf50;
+                text-decoration: none;
+            }
+            .already-account a:hover {
+                text-decoration: underline;
             }
         </style>
     </head>
@@ -116,8 +155,11 @@
                 <button type="button" id="submit-info">Отправить</button>
                 <button type="button" id="skip-info">Пропустить</button>
             </div>
-        </div>
 
+            <div class="already-account">
+                <p>Уже есть аккаунт? <a href="/login">Войти</a></p>
+            </div>
+        </div>
         <script>
             const registrationForm =
                 document.getElementById('registration-form')
