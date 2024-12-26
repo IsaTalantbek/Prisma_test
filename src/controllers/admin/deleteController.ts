@@ -26,11 +26,11 @@ const deleteController = async (req: any, res: any) => {
                     .status(500)
                     .json({ message: 'незнаю как, но у поста нет создателя' })
             }
-            const result = await prisma.post.delete({
-                where: { id: id },
-            })
             await prisma.like.deleteMany({
                 where: { postId: id },
+            })
+            const result = await prisma.post.delete({
+                where: { id: id },
             })
 
             await prisma.info.update({
