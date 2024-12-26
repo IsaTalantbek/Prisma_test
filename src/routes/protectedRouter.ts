@@ -8,8 +8,6 @@ import adminRouter from './adminRouter'
 
 const router = Router()
 
-// Маршрут для главной страницы
-router.get('/main')
 router.use('/admin', checkRole('admin'), adminRouter)
 router.get('/search', (req, res) => {
     res.sendFile(searchPath)
