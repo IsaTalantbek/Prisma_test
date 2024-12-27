@@ -4,35 +4,33 @@ const prisma = new PrismaClient()
 
 const likeService = async (postId: number, userId: number) => {
     try {
-        // Выполняем всё в одной транзакции
         const result = await prisma.$transaction(async (prisma) => {
-            // Проверка наличия поста и связанной информации
             const postWithInfo = await prisma.post.findFirst({
                 where: { id: postId },
                 include: { info: true },
             })
 
-            if (!postWithInfo) {
-                return { message: 'likepost-notfoundpost-500' }
+            if (!postWithInfo || !postWithInfo.info) {
+                return { message: 'Post not found or missing info' }
             }
 
-            if (!postWithInfo.info) {
-                return { message: 'likepost-notfoundinfo-500' }
-            }
-
-            // Поиск существующего лайка/дизлайка
+            // Проверка на существующий лайк/дизлайк
             const likeCheck = await prisma.like.findFirst({
-                where: { userId: userId, postId: postId },
+                where: { userId, postId },
             })
 
             if (likeCheck) {
                 if (likeCheck.type === 'like') {
-                    return { message: 'like-userdisliked-500' } // Пользователь уже дизлайкнул пост
+                    return { message: 'Already liked' }
                 }
-
                 if (likeCheck.type === 'dislike') {
-                    // Убираем лайк и ставим дизлайк
-                    await prisma.post.update({
+                    // Обработка смены с дизлайка на лайк
+                    await prisma.like.update({
+                        where: { id: likeCheck.id },
+                        data: { type: 'like' },
+                    })
+
+                    const updatedPost = await prisma.post.update({
                         where: { id: postId },
                         data: {
                             likes: { increment: 1 },
@@ -48,19 +46,18 @@ const likeService = async (postId: number, userId: number) => {
                         },
                     })
 
-                    await prisma.like.update({
-                        where: { id: likeCheck.id },
-                        data: { type: 'like' },
-                    })
-
                     return {
-                        message: 'like-changed-from-dislike-to-like',
-                        post: postWithInfo,
+                        message: 'Changed from dislike to like',
+                        post: updatedPost,
                     }
                 }
             } else {
-                // Если лайка/дизлайка не было — создаём новый дизлайк
-                await prisma.post.update({
+                // Новый лайк
+                await prisma.like.create({
+                    data: { userId, postId, type: 'like' },
+                })
+
+                const updatedPost = await prisma.post.update({
                     where: { id: postId },
                     data: { likes: { increment: 1 } },
                 })
@@ -70,18 +67,14 @@ const likeService = async (postId: number, userId: number) => {
                     data: { likes: { increment: 1 } },
                 })
 
-                await prisma.like.create({
-                    data: { userId: userId, postId: postId, type: 'like' },
-                })
-
-                return { message: 'like-added', post: postWithInfo }
+                return { message: 'Like added', post: updatedPost }
             }
         })
 
-        return result // Результат из транзакции
+        return result
     } catch (error) {
         console.error('Error liking post:', error)
-        throw new Error('Could not dislike the post')
+        throw new Error('Could not like the post')
     }
 }
 
