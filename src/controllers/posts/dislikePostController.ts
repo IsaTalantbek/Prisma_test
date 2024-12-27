@@ -26,12 +26,9 @@ const dislikePostController = async (req: any, res: any) => {
             const result = await dislikeService(postId, userId)
 
             if (!result) {
-                return res.status(500).json({ message: 'like-error-500' })
+                return res.status(500).json({ message: 'dislike-error-500' })
             }
-            if (
-                result.message === 'dislike-added' ||
-                result.message === 'dislike-changed-from-like-to-dislike'
-            ) {
+            if (result.message === 'dislike-added') {
                 return res.status(200).json({ message: 'dislike-added' })
             }
             return res.status(500).json({ message: result })

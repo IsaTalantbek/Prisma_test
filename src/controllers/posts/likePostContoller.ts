@@ -28,10 +28,7 @@ const likePostController = async (req: any, res: any) => {
             if (!result) {
                 return res.status(500).json({ message: 'like-error-500' })
             }
-            if (
-                result.message === 'like-added' ||
-                result.message === 'like-changed-from-dislike-to-like'
-            ) {
+            if (result.message === 'like-added') {
                 return res.status(200).json({ message: 'like-added' })
             }
             return res.status(500).json({ message: result.message })

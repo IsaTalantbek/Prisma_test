@@ -64,7 +64,7 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
             console.error('Error refreshing token:', error.message || error)
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
             res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
-            return res.status(500).json({ message: 'Token refresh failed' })
+            return res.redirect('/a/reg')
         }
     }
 
