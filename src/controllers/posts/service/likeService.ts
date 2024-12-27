@@ -4,80 +4,84 @@ const prisma = new PrismaClient()
 
 const likeService = async (postId: number, userId: number) => {
     try {
-        // Проверка наличия поста и связанной информации
-        const postWithInfo = await prisma.post.findFirst({
-            where: { id: postId },
-            include: { info: true },
-        })
+        // Выполняем всё в одной транзакции
+        const result = await prisma.$transaction(async (prisma) => {
+            // Проверка наличия поста и связанной информации
+            const postWithInfo = await prisma.post.findFirst({
+                where: { id: postId },
+                include: { info: true },
+            })
 
-        if (!postWithInfo) {
-            return { message: 'likepost-notfoundpost-500' }
-        }
-
-        if (!postWithInfo.info) {
-            return { message: 'likepost-notfoundinfo-500' }
-        }
-
-        // Поиск существующего лайка
-        const likeCheck = await prisma.like.findFirst({
-            where: { userId: userId, postId: postId },
-        })
-
-        // Логика обработки лайков/дизлайков
-        if (likeCheck) {
-            if (likeCheck.type === 'like') {
-                return { message: 'like-userliked-500' } // Пользователь уже лайкнул пост
+            if (!postWithInfo) {
+                return { message: 'likepost-notfoundpost-500' }
             }
 
-            if (likeCheck.type === 'dislike') {
-                // Если был дизлайк — убираем дизлайк и добавляем лайк
-                await prisma.$transaction([
-                    prisma.post.update({
+            if (!postWithInfo.info) {
+                return { message: 'likepost-notfoundinfo-500' }
+            }
+
+            // Поиск существующего лайка/дизлайка
+            const likeCheck = await prisma.like.findFirst({
+                where: { userId: userId, postId: postId },
+            })
+
+            if (likeCheck) {
+                if (likeCheck.type === 'like') {
+                    return { message: 'like-userdisliked-500' } // Пользователь уже дизлайкнул пост
+                }
+
+                if (likeCheck.type === 'dislike') {
+                    // Убираем лайк и ставим дизлайк
+                    await prisma.post.update({
                         where: { id: postId },
                         data: {
                             likes: { increment: 1 },
                             dislikes: { decrement: 1 },
                         },
-                    }),
-                    prisma.info.update({
+                    })
+
+                    await prisma.info.update({
                         where: { id: postWithInfo.info.id },
                         data: {
                             likes: { increment: 1 },
                             dislikes: { decrement: 1 },
                         },
-                    }),
-                    prisma.like.update({
+                    })
+
+                    await prisma.like.update({
                         where: { id: likeCheck.id },
                         data: { type: 'like' },
-                    }),
-                ])
+                    })
 
-                return {
-                    message: 'like-changed-from-dislike-to-like',
-                    post: postWithInfo,
+                    return {
+                        message: 'like-changed-from-dislike-to-like',
+                        post: postWithInfo,
+                    }
                 }
-            }
-        } else {
-            // Если лайка не было — создаем лайк
-            await prisma.$transaction([
-                prisma.post.update({
+            } else {
+                // Если лайка/дизлайка не было — создаём новый дизлайк
+                await prisma.post.update({
                     where: { id: postId },
                     data: { likes: { increment: 1 } },
-                }),
-                prisma.info.update({
+                })
+
+                await prisma.info.update({
                     where: { id: postWithInfo.info.id },
                     data: { likes: { increment: 1 } },
-                }),
-                prisma.like.create({
-                    data: { userId: userId, postId: postId, type: 'like' },
-                }),
-            ])
+                })
 
-            return { message: 'like-added', post: postWithInfo }
-        }
+                await prisma.like.create({
+                    data: { userId: userId, postId: postId, type: 'like' },
+                })
+
+                return { message: 'like-added', post: postWithInfo }
+            }
+        })
+
+        return result // Результат из транзакции
     } catch (error) {
         console.error('Error liking post:', error)
-        throw new Error('Could not like the post')
+        throw new Error('Could not dislike the post')
     }
 }
 
