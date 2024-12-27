@@ -22,6 +22,15 @@ const getController = async (req: any, res: any) => {
                 })
                 return res.status(200).json({ result })
             }
+        } else if (table === 'like') {
+            if (!id) {
+                const result = await prisma.like.findMany()
+                return res.status(200).json({ result })
+            }
+            const result = await prisma.like.findMany({
+                where: { postId: id },
+            })
+            return res.status(200).json({ result })
         }
         return res.status(500).json({
             message: `возможно вы ввели неправильную таблицу: ${table}`,

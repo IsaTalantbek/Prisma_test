@@ -14,7 +14,7 @@ const secretKey = process.env.JWT_SECRET || 'hello world'
 
 const profileUpdateController = async (req: any, res: any) => {
     let { username, info, age, gender } = req.body
-
+    console.log(req.body)
     age = parseInt(age, 10)
 
     if (!(await checkLogin(username))) {
@@ -54,7 +54,7 @@ const profileUpdateController = async (req: any, res: any) => {
             // Доступ к данным из токена
 
             const userId = decoded.userId
-
+            console.log(`userId: ${userId}`)
             const result = await prisma.info.update({
                 where: { userId: userId },
                 data: {
