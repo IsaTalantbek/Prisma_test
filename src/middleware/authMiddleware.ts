@@ -42,7 +42,12 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
 
             // Генерация нового access token
             const newAccessToken = jwt.sign(
-                { userId, role: user.info.role, login: user.login },
+                {
+                    userId,
+                    role: user.info.role,
+                    login: user.login,
+                    ban: user.ban,
+                },
                 JWT_SECRET,
                 { expiresIn: '1h' }
             )
@@ -72,16 +77,9 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
             return res.redirect('/reg')
         }
         const decoded = jwt.verify(token, JWT_SECRET) as any
-        const userId = decoded.userId
-        const check = await prisma.user.findFirst({
-            where: { id: userId },
-        })
-        if (!check) {
-            res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
-            res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
-            return res.redirect('/reg')
-        }
-        if (check.ban === 'yes') {
+        const ban = decoded.ban
+
+        if (ban === 'yes') {
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
             res.clearCookie('rAuthToken', { httpOnly: true, secure: true })
             return res.send('Похоже, вы забанены^_^')
@@ -157,7 +155,12 @@ export const redirectIfAuthenticated = async (
 
                 // Создаем новый Access Token
                 const newAccessToken = jwt.sign(
-                    { userId: userId, role: user.info.role, login: user.login },
+                    {
+                        userId: userId,
+                        role: user.info.role,
+                        login: user.login,
+                        ban: user.ban,
+                    },
                     JWT_SECRET,
                     { expiresIn: '1h' }
                 )

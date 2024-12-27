@@ -41,6 +41,7 @@ const loginController = async (req: any, res: any) => {
                 userId: existUser.id,
                 role: result.role,
                 login: existUser.login,
+                ban: existUser.ban,
             }, // Используем правильные данные
             JWT_SECRET,
             { expiresIn: '1h' }

@@ -59,6 +59,7 @@ const regController = async (req: any, res: any) => {
                 userId: result.user.id,
                 role: result.userInfo.role,
                 login: result.user.login,
+                ban: result.user.ban,
             }, // Используем правильные данные
             JWT_SECRET,
             { expiresIn: '1h' }

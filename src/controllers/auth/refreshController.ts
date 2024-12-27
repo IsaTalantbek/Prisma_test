@@ -40,7 +40,12 @@ const refreshController = async (req: any, res: any) => {
             return res.status(500).json({ message: 'refresh-notexist-500' })
         }
         const newAccessToken = jwt.sign(
-            { userId: userId, role: result.info.role, login: result.login },
+            {
+                userId: userId,
+                role: result.info.role,
+                login: result.login,
+                ban: result.ban,
+            },
             JWT_SECRET,
             {
                 expiresIn: '1h',

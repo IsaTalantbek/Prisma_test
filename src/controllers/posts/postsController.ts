@@ -26,6 +26,7 @@ const postsController = async (req: any, res: any) => {
             const thisId = decoded.userId
             const posts = await prisma.post.findMany({
                 include: { user: true },
+                orderBy: { createdAt: 'desc' },
             })
             return res.render('posts', {
                 posts: posts,
