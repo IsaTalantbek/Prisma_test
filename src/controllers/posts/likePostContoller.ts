@@ -11,29 +11,28 @@ const likePostController = async (req: any, res: any) => {
     if (!token) {
         return res.status(401).send('Непредвиденная ошибка, обновите страницу')
     }
-    const postId = await parseInt(req.params.id, 10)
+
+    const postId = parseInt(req.params.id, 10) // Убираем await для parseInt
     try {
-        jwt.verify(token, secretKey, async (err: any, decoded: any) => {
-            if (err) {
-                return res
-                    .status(401)
-                    .send('Непредвиденная ошибка, обновите страницу')
-            }
+        // Верификация токена синхронно, а не через callback
+        const decoded = jwt.verify(token, secretKey) as any
 
-            // Доступ к данным из токена
-            const userId = decoded.userId
+        // Доступ к данным из токена
+        const userId = decoded.userId
 
-            const result = await likeService(postId, userId)
+        // Вызываем сервис лайка
+        const result = await likeService(postId, userId)
 
-            if (!result) {
-                return res.status(500).json({ message: 'like-error-500' })
-            }
-            if (result.message === 'like-added') {
-                return res.status(200).json({ message: 'like-added' })
-            }
-            return res.status(500).json({ message: result.message })
-        })
+        // Обработка результата
+        if (!result) {
+            return res.status(500).json({ message: 'like-error-500' })
+        }
+        if (result.message === 'like-added') {
+            return res.status(200).json({ message: 'like-added' })
+        }
+        return res.status(500).json({ message: result.message })
     } catch (error: any) {
+        // Отлавливаем любые ошибки и логируем их
         console.error(error)
         res.status(500).json({ error: error.message })
     }

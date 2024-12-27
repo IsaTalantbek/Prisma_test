@@ -11,29 +11,28 @@ const dislikePostController = async (req: any, res: any) => {
     if (!token) {
         return res.status(401).send('Непредвиденная ошибка, обновите страницу')
     }
-    const postId = await parseInt(req.params.id, 10)
+
+    const postId = parseInt(req.params.id, 10) // Убираем await для parseInt
     try {
-        jwt.verify(token, secretKey, async (err: any, decoded: any) => {
-            if (err) {
-                return res
-                    .status(401)
-                    .send('Непредвиденная ошибка, обновите страницу')
-            }
+        // Верификация токена синхронно
+        const decoded = jwt.verify(token, secretKey) as any
 
-            // Доступ к данным из токена
-            const userId = decoded.userId
+        // Доступ к данным из токена
+        const userId = decoded.userId
 
-            const result = await dislikeService(postId, userId)
+        // Вызываем сервис дизлайка
+        const result = await dislikeService(postId, userId)
 
-            if (!result) {
-                return res.status(500).json({ message: 'dislike-error-500' })
-            }
-            if (result.message === 'dislike-added') {
-                return res.status(200).json({ message: 'dislike-added' })
-            }
-            return res.status(500).json({ message: result })
-        })
+        // Обработка результата
+        if (!result) {
+            return res.status(500).json({ message: 'dislike-error-500' })
+        }
+        if (result.message === 'dislike-added') {
+            return res.status(200).json({ message: 'dislike-added' })
+        }
+        return res.status(500).json({ message: result.message }) // Здесь дополнительно обращаем внимание на возможное возвращаемое сообщение
     } catch (error: any) {
+        // Логирование ошибок и возврат их пользователю
         console.error(error)
         res.status(500).json({ error: error.message })
     }

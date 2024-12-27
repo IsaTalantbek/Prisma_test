@@ -15,27 +15,32 @@ const postsController = async (req: any, res: any) => {
     }
 
     try {
-        jwt.verify(token, secretKey, async (err: any, decoded: any) => {
-            if (err) {
-                return res
-                    .status(401)
-                    .send('Непредвиденная ошибка, обновите страницу')
-            }
+        // Используем promise-based jwt.verify
+        const decoded: any = await new Promise((resolve, reject) => {
+            jwt.verify(token, secretKey, (err: any, decoded: any) => {
+                if (err) {
+                    return reject(err)
+                }
+                resolve(decoded)
+            })
+        })
 
-            // Доступ к данным из токена
-            const thisId = decoded.userId
-            const posts = await prisma.post.findMany({
-                include: { user: true },
-                orderBy: { createdAt: 'desc' },
-            })
-            return res.render('posts', {
-                posts: posts,
-                thisId: thisId,
-            })
+        // Доступ к данным из токена
+        const thisId = decoded.userId
+
+        const posts = await prisma.post.findMany({
+            include: { user: true },
+            orderBy: { createdAt: 'desc' },
+        })
+
+        return res.render('posts', {
+            posts: posts,
+            thisId: thisId,
         })
     } catch (error: any) {
         console.error(error?.message || error)
         return res.status(500).json({ message: 'упс, неполадки!' })
     }
 }
+
 export default postsController
