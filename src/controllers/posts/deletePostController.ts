@@ -10,6 +10,10 @@ const deletePostController = async (req: any, res: any) => {
     const token = req.cookies['aAuthToken']
     const postId = parseInt(req.params.id, 10)
 
+    if (isNaN(postId)) {
+        return res.status(500).send('Неправильные значения')
+    }
+
     if (!token) {
         return res.status(401).send('Непредвиденная ошибка, обновите страницу')
     }

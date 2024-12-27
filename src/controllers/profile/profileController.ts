@@ -36,6 +36,7 @@ const profileController = async (req: any, res: any) => {
             }
 
             return res.render('profile', {
+                userId: userId,
                 username: user.username,
                 login: user.login,
                 info: user.info.info,

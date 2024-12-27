@@ -5,6 +5,7 @@ import dislikePostController from '../controllers/posts/dislikePostController'
 import likePostController from '../controllers/posts/likePostContoller'
 import deletePostController from '../controllers/posts/deletePostController'
 import postsController from '../controllers/posts/postsController'
+import userPostsController from '../controllers/posts/userPostsController'
 
 const router = Router()
 
@@ -15,6 +16,8 @@ router.delete('/:id/delete', deletePostController)
 router.post('/:id/like', likePostController)
 
 router.post('/:id/dislike', dislikePostController)
+
+router.get('/:id/posts', userPostsController)
 
 router.get('/create', async (req: any, res: any) => {
     res.sendFile(createPostPath)

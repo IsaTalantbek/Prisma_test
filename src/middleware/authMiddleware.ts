@@ -59,7 +59,7 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
                 maxAge: 3600000, // 1 час
             })
 
-            return next()
+            return res.redirect(req.originalUrl)
         } catch (error: any) {
             console.error('Error refreshing token:', error.message || error)
             res.clearCookie('aAuthToken', { httpOnly: true, secure: true })
@@ -92,7 +92,7 @@ export const authenticateToken = async (req: any, res: any, next: any) => {
 export const checkRole = (role: string) => {
     return (req: any, res: any, next: any) => {
         if (!req.user) {
-            return res.redirect('/reg') // Если нет пользователя, отправляем ошибку
+            return res.sendFile(errorPage) // Если нет пользователя, отправляем ошибку
         }
         if (req.user.role !== role) {
             // Если роль пользователя не соответствует ожидаемой, отправляем страницу ошибки

@@ -4,8 +4,6 @@ const prisma = new PrismaClient()
 
 const userProfileController = async (req: any, res: any) => {
     const userId = parseInt(req.params.id, 10)
-    console.log('hello')
-    console.log(userId)
     try {
         const user = await prisma.user.findFirst({
             where: { id: userId },
