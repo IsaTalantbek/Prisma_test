@@ -10,35 +10,38 @@ const deletePostController = async (req: any, res: any) => {
     const token = req.cookies['aAuthToken']
     const postId = parseInt(req.params.id, 10)
 
+    // Проверка на правильность ID
     if (isNaN(postId)) {
-        return res.status(500).send('Неправильные значения')
+        return res
+            .status(400)
+            .json({ message: 'Некорректный идентификатор поста' })
     }
 
+    // Проверка на наличие токена
     if (!token) {
-        return res.status(401).send('Непредвиденная ошибка, обновите страницу')
-    }
-    if (isNaN(postId)) {
-        return res.status(400).send('Некорректный идентификатор поста')
+        return res
+            .status(401)
+            .json({ message: 'Непредвиденная ошибка, обновите страницу' })
     }
 
     try {
-        jwt.verify(token, secretKey, async (err: any, decoded: any) => {
-            if (err) {
-                return res
-                    .status(401)
-                    .send('Непредвиденная ошибка, обновите страницу')
-            }
+        // Проверка и декодирование токена синхронно
+        const decoded: any = jwt.verify(token, secretKey)
 
-            const thisId = decoded.userId
-            const result = await deleteService(postId, thisId)
+        // Доступ к userId из токена
+        const thisId = decoded.userId
 
-            if (!result) {
-                return res.status(500).json({ message: result })
-            }
+        // Удаление поста
+        const result = await deleteService(postId, thisId)
 
-            return res.status(200).json({
-                message: 'Пост и все связанные данные успешно удалены',
+        if (!result) {
+            return res.status(500).json({
+                message: 'Ошибка при удалении поста, попробуйте снова',
             })
+        }
+
+        return res.status(200).json({
+            message: 'Пост и все связанные данные успешно удалены',
         })
     } catch (error: any) {
         console.error(error.message || error)

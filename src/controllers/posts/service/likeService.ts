@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 const likeService = async (postId: number, userId: number) => {
     try {
         const result = await prisma.$transaction(async (prisma) => {
-            // Захватываем пост в рамках транзакции и блокируем его для дальнейшей обработки
+            // Захватываем пост с его информацией в рамках транзакции
             const postWithInfo = await prisma.post.findFirst({
                 where: { id: postId },
                 include: { info: true },
@@ -25,56 +25,59 @@ const likeService = async (postId: number, userId: number) => {
                 },
             })
 
+            let updatedPost
+            let updatedInfo
+
+            // Если у нас уже есть лайк
             if (existingLike) {
-                // Если лайк уже существует, возвращаем ошибку
                 return { message: 'Already liked' }
             }
 
+            // Если у нас был дизлайк
             if (existingDislike) {
-                // Если был дизлайк, изменяем тип с 'dislike' на 'like' и обновляем статистику
-                const updatedLike = await prisma.like.update({
-                    where: { id: existingDislike.id },
-                    data: { type: 'like' },
-                })
-
-                // Обновление поста для снятия дизлайка и увеличения лайка
-                const updatedPost = await prisma.post.update({
+                // Начинаем переключение состояния с дизлайка на лайк
+                updatedPost = await prisma.post.update({
                     where: { id: postId },
                     data: {
-                        likes: { increment: 1 },
-                        dislikes: { decrement: 1 },
+                        likes: { increment: 1 }, // Увеличиваем количество лайков
+                        dislikes: { decrement: 1 }, // Уменьшаем количество дизлайков
                     },
                 })
-
-                // Обновление статистики лайков и дизлайков в модели Info
-                await prisma.info.update({
+                // Обновление статистики в таблице info
+                updatedInfo = await prisma.info.update({
                     where: { id: postWithInfo.info.id },
                     data: {
                         likes: { increment: 1 },
                         dislikes: { decrement: 1 },
                     },
                 })
+                // Обновляем тип в таблице like (с 'dislike' на 'like')
+                const updatedLike = await prisma.like.update({
+                    where: { id: existingDislike.id },
+                    data: { type: 'like' },
+                })
 
-                return { message: 'like-added', post: updatedPost }
+                return { message: 'like-switched', post: updatedPost }
             }
 
-            // Если ни лайка, ни дизлайка нет, создаем новый лайк
-            await prisma.like.create({
-                data: { userId, postId, type: 'like' },
-            })
-
-            const updatedPost = await prisma.post.update({
+            // Если нет ни лайка, ни дизлайка — создаем новый лайк
+            updatedPost = await prisma.post.update({
                 where: { id: postId },
                 data: {
                     likes: { increment: 1 },
                 },
             })
 
-            await prisma.info.update({
+            updatedInfo = await prisma.info.update({
                 where: { id: postWithInfo.info.id },
                 data: {
                     likes: { increment: 1 },
                 },
+            })
+
+            // Создание нового лайка
+            await prisma.like.create({
+                data: { userId, postId, type: 'like' },
             })
 
             return { message: 'like-added', post: updatedPost }

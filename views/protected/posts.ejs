@@ -214,16 +214,7 @@
                         })
                             .then((response) => response.json())
                             .then((data) => {
-                                // Обновить только количество лайков/дизлайков
-                                const likeButton = document.querySelector(
-                                    `#like-${postId}`
-                                )
-                                const dislikeButton = document.querySelector(
-                                    `#dislike-${postId}`
-                                )
-
-                                likeButton.textContent = `👍 ${data.likes}`
-                                dislikeButton.textContent = `👎 ${data.dislikes}`
+                                location.reload()
                             })
                     })
                 })
@@ -237,16 +228,7 @@
                         })
                             .then((response) => response.json())
                             .then((data) => {
-                                // Обновить только количество лайков/дизлайков
-                                const likeButton = document.querySelector(
-                                    `#like-${postId}`
-                                )
-                                const dislikeButton = document.querySelector(
-                                    `#dislike-${postId}`
-                                )
-
-                                likeButton.textContent = `👍 ${data.likes}`
-                                dislikeButton.textContent = `👎 ${data.dislikes}`
+                                location.reload()
                             })
                     })
                 })

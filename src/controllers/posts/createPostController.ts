@@ -9,45 +9,53 @@ const secretKey = process.env.JWT_SECRET || 'hello'
 
 const createPostController = async (req: any, res: any) => {
     const { text } = req.body
-
     const token = req.cookies['aAuthToken']
 
+    // Проверка наличия токена
     if (!token) {
-        return res.status(401).send('Непредвиденная ошибка, обновите страницу')
+        return res
+            .status(401)
+            .json({ message: 'Непредвиденная ошибка, обновите страницу' })
     }
 
+    // Проверка на пустой текст
     if (!text) {
         return res.status(400).json({ message: 'Ничего не пришло' })
     }
+
+    // Проверка на валидность текста
     if (!(await checkInfo(text))) {
         return res
-            .status(401)
-            .json({ message: 'текст должен быть не больше 250 символов' })
+            .status(400)
+            .json({ message: 'Текст должен быть не больше 250 символов' })
     }
+
     try {
-        jwt.verify(token, secretKey, async (err: any, decoded: any) => {
-            if (err) {
-                return res
-                    .status(401)
-                    .send('Непредвиденная ошибка, обновите страницу')
-            }
+        // Проверяем токен с использованием синхронной функции
+        const decoded: any = jwt.verify(token, secretKey)
 
-            // Доступ к данным из токена
-            const userId = decoded.userId
+        // Доступ к данным из токена
+        const userId = decoded.userId
 
-            const result = await createPostService(userId, text)
+        // Создаем пост
+        const result = await createPostService(userId, text)
 
-            if (!result) {
-                return res.status(500).json({ message: 'createPost-error-500' })
-            }
-            if (result.message === 'createPost-create-200') {
-                return res.status(200).json({ message: 'createPost-added' })
-            }
-            return res.status(500).json({ message: result.message, result })
-        })
+        if (!result) {
+            return res
+                .status(500)
+                .json({ message: 'Ошибка создания поста, попробуйте позже' })
+        }
+
+        if (result.message === 'createPost-create-200') {
+            return res.status(200).json({ message: 'Пост успешно добавлен' })
+        }
+
+        return res.status(500).json({ message: result.message })
     } catch (error: any) {
-        res.status(500).json({ error: error.message })
         console.error(error)
+        return res
+            .status(500)
+            .json({ message: 'Непредвиденная ошибка', error: error.message })
     }
 }
 
