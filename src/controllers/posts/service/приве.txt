@@ -1,0 +1,260 @@
+server started
+Like service called { postId: 5, userId: 1 }
+Starting transaction...
+Found post with info: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 0,
+  dislikes: 0,
+  userId: 1,
+  infoId: 1,
+  info: {
+    id: 1,
+    userId: 1,
+    gender: 'undefined',
+    age: 0,
+    info: 'undefined',
+    role: 'user',
+    postCount: 1,
+    likes: 0,
+    dislikes: 0
+  }
+}
+Existing dislike: null
+Existing like: null
+Adding new like for user: 1
+New like added
+Updated post after new like: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 1,
+  dislikes: 0,
+  userId: 1,
+  infoId: 1
+}
+Updated post info after new like: {
+  id: 1,
+  userId: 1,
+  gender: 'undefined',
+  age: 0,
+  info: 'undefined',
+  role: 'user',
+  postCount: 1,
+  likes: 1,
+  dislikes: 0
+}
+Transaction result: {
+  message: 'like-added',
+  post: {
+    id: 5,
+    text: 'ТЕСТ',
+    createdAt: 2024-12-27T11:02:44.984Z,
+    likes: 1,
+    dislikes: 0,
+    userId: 1,
+    infoId: 1
+  }
+}
+
+
+Dislike service called { postId: 5, userId: 1 }
+Starting transaction...
+Found post with info: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 1,
+  dislikes: 0,
+  userId: 1,
+  infoId: 1,
+  info: {
+    id: 1,
+    userId: 1,
+    gender: 'undefined',
+    age: 0,
+    info: 'undefined',
+    role: 'user',
+    postCount: 1,
+    likes: 1,
+    dislikes: 0
+  }
+}
+Existing dislike: null
+Existing like: { id: 5, userId: 1, postId: 5, type: 'like' }
+Changing like to dislike for user: 1
+Like switched to dislike
+Updated post after like -> dislike: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 0,
+  dislikes: 1,
+  userId: 1,
+  infoId: 1
+}
+Updated post info after like -> dislike: {
+  id: 1,
+  userId: 1,
+  gender: 'undefined',
+  age: 0,
+  info: 'undefined',
+  role: 'user',
+  postCount: 1,
+  likes: 0,
+  dislikes: 1
+}
+Transaction result: {
+  message: 'like-switched-to-dislike',
+  post: {
+    id: 5,
+    text: 'ТЕСТ',
+    createdAt: 2024-12-27T11:02:44.984Z,
+    likes: 0,
+    dislikes: 1,
+    userId: 1,
+    infoId: 1
+  }
+}
+Like service called { postId: 5, userId: 1 }
+Starting transaction...
+Found post with info: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 0,
+  dislikes: 1,
+  userId: 1,
+  infoId: 1,
+  info: {
+    id: 1,
+    userId: 1,
+    gender: 'undefined',
+    age: 0,
+    info: 'undefined',
+    role: 'user',
+    postCount: 1,
+    likes: 0,
+    dislikes: 1
+  }
+}
+Existing dislike: null
+Existing like: { id: 5, userId: 1, postId: 5, type: 'dislike' }
+Changing dislike to like for user: 1
+Like service called { postId: 5, userId: 1 }
+Dislike switched to like
+Starting transaction...
+Found post with info: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 0,
+  dislikes: 1,
+  userId: 1,
+  infoId: 1,
+  info: {
+    id: 1,
+    userId: 1,
+    gender: 'undefined',
+    age: 0,
+    info: 'undefined',
+    role: 'user',
+    postCount: 1,
+    likes: 0,
+    dislikes: 1
+  }
+}
+Updated post after dislike -> like: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 1,
+  dislikes: 0,
+  userId: 1,
+  infoId: 1
+}
+Existing dislike: null
+Existing like: { id: 5, userId: 1, postId: 5, type: 'dislike' }
+Changing dislike to like for user: 1
+Updated post info after dislike -> like: {
+  id: 1,
+  userId: 1,
+  gender: 'undefined',
+  age: 0,
+  info: 'undefined',
+  role: 'user',
+  postCount: 1,
+  likes: 1,
+  dislikes: 0
+}
+Transaction result: {
+  message: 'dislike-switched-to-like',
+  post: {
+    id: 5,
+    text: 'ТЕСТ',
+    createdAt: 2024-12-27T11:02:44.984Z,
+    likes: 1,
+    dislikes: 0,
+    userId: 1,
+    infoId: 1
+  }
+}
+Dislike switched to like
+Like service called { postId: 5, userId: 1 }
+Updated post after dislike -> like: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 2,
+  dislikes: -1,
+  userId: 1,
+  infoId: 1
+}
+Starting transaction...
+Updated post info after dislike -> like: {
+  id: 1,
+  userId: 1,
+  gender: 'undefined',
+  age: 0,
+  info: 'undefined',
+  role: 'user',
+  postCount: 1,
+  likes: 2,
+  dislikes: -1
+}
+Found post with info: {
+  id: 5,
+  text: 'ТЕСТ',
+  createdAt: 2024-12-27T11:02:44.984Z,
+  likes: 1,
+  dislikes: 0,
+  userId: 1,
+  infoId: 1,
+  info: {
+    id: 1,
+    userId: 1,
+    gender: 'undefined',
+    age: 0,
+    info: 'undefined',
+    role: 'user',
+    postCount: 1,
+    likes: 1,
+    dislikes: 0
+  }
+}
+Existing dislike: { id: 5, userId: 1, postId: 5, type: 'like' }
+User has already liked this post
+Transaction result: { message: 'Already liked' }
+Transaction result: {
+  message: 'dislike-switched-to-like',
+  post: {
+    id: 5,
+    text: 'ТЕСТ',
+    createdAt: 2024-12-27T11:02:44.984Z,
+    likes: 2,
+    dislikes: -1,
+    userId: 1,
+    infoId: 1
+  }
+}

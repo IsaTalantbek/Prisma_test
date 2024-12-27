@@ -1,11 +1,21 @@
 import { PrismaClient } from '@prisma/client'
+import { Mutex } from 'async-mutex'
 
 const prisma = new PrismaClient()
+const userMutex = new Map() // Хранение блокировок для пользователей
+
+const getUserMutex = (userId: number) => {
+    if (!userMutex.has(userId)) {
+        userMutex.set(userId, new Mutex())
+    }
+    return userMutex.get(userId)
+}
 
 const likeService = async (postId: number, userId: number) => {
+    const mutex = getUserMutex(userId)
+    const release = await mutex.acquire() // Блокировка только для пользователя
     try {
         const result = await prisma.$transaction(async (prisma) => {
-            // Захватываем пост с его информацией в рамках транзакции
             const postWithInfo = await prisma.post.findFirst({
                 where: { id: postId },
                 include: { info: true },
@@ -15,10 +25,16 @@ const likeService = async (postId: number, userId: number) => {
                 return { message: 'Post not found or missing info' }
             }
 
-            // Проверка наличия лайка или дизлайка
             const existingLike = await prisma.like.findUnique({
-                where: { userId_postId_type: { userId, postId, type: 'like' } },
+                where: {
+                    userId_postId_type: { userId, postId, type: 'like' },
+                },
             })
+
+            if (existingLike) {
+                return { message: 'Already liked' }
+            }
+
             const existingDislike = await prisma.like.findUnique({
                 where: {
                     userId_postId_type: { userId, postId, type: 'dislike' },
@@ -28,22 +44,20 @@ const likeService = async (postId: number, userId: number) => {
             let updatedPost
             let updatedInfo
 
-            // Если у нас уже есть лайк
-            if (existingLike) {
-                return { message: 'Already liked' }
-            }
-
-            // Если у нас был дизлайк
             if (existingDislike) {
-                // Начинаем переключение состояния с дизлайка на лайк
+                await prisma.like.update({
+                    where: { id: existingDislike.id },
+                    data: { type: 'like' },
+                })
+
                 updatedPost = await prisma.post.update({
                     where: { id: postId },
                     data: {
-                        likes: { increment: 1 }, // Увеличиваем количество лайков
-                        dislikes: { decrement: 1 }, // Уменьшаем количество дизлайков
+                        likes: { increment: 1 },
+                        dislikes: { decrement: 1 },
                     },
                 })
-                // Обновление статистики в таблице info
+
                 updatedInfo = await prisma.info.update({
                     where: { id: postWithInfo.info.id },
                     data: {
@@ -51,16 +65,17 @@ const likeService = async (postId: number, userId: number) => {
                         dislikes: { decrement: 1 },
                     },
                 })
-                // Обновляем тип в таблице like (с 'dislike' на 'like')
-                const updatedLike = await prisma.like.update({
-                    where: { id: existingDislike.id },
-                    data: { type: 'like' },
-                })
 
-                return { message: 'like-switched', post: updatedPost }
+                return {
+                    message: 'dislike-switched-to-like',
+                    post: updatedPost,
+                }
             }
 
-            // Если нет ни лайка, ни дизлайка — создаем новый лайк
+            await prisma.like.create({
+                data: { userId, postId, type: 'like' },
+            })
+
             updatedPost = await prisma.post.update({
                 where: { id: postId },
                 data: {
@@ -75,18 +90,12 @@ const likeService = async (postId: number, userId: number) => {
                 },
             })
 
-            // Создание нового лайка
-            await prisma.like.create({
-                data: { userId, postId, type: 'like' },
-            })
-
             return { message: 'like-added', post: updatedPost }
         })
 
         return result
-    } catch (error) {
-        console.error('Error liking post:', error)
-        throw new Error('Could not like the post')
+    } finally {
+        release() // Освобождение блокировки для пользователя
     }
 }
 

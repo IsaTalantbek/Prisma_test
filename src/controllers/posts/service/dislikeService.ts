@@ -1,11 +1,24 @@
 import { PrismaClient } from '@prisma/client'
+import { Mutex } from 'async-mutex'
 
 const prisma = new PrismaClient()
 
+// Map для хранения мьютексов на каждый пост
+const postLocks = new Map<number, Mutex>()
+
+const getUserMutex = (userId: number) => {
+    if (!postLocks.has(userId)) {
+        postLocks.set(userId, new Mutex())
+    }
+    return postLocks.get(userId)!
+}
+
 const dislikeService = async (postId: number, userId: number) => {
+    const mutex = getUserMutex(userId) // Получаем мьютекс для конкретного поста
+    const release = await mutex.acquire()
+
     try {
         const result = await prisma.$transaction(async (prisma) => {
-            // Захватываем пост с его информацией в транзакции
             const postWithInfo = await prisma.post.findFirst({
                 where: { id: postId },
                 include: { info: true },
@@ -15,33 +28,38 @@ const dislikeService = async (postId: number, userId: number) => {
                 return { message: 'Post not found or missing info' }
             }
 
-            // Проверка, есть ли уже дизлайк
             const existingDislike = await prisma.like.findUnique({
                 where: {
                     userId_postId_type: { userId, postId, type: 'dislike' },
                 },
             })
 
-            // Если есть, то возвращаем сообщение, что уже дизлайк
+            // Если дизлайк уже существует
             if (existingDislike) {
                 return { message: 'Already disliked' }
             }
 
-            // Проверка, есть ли лайк
             const existingLike = await prisma.like.findUnique({
-                where: { userId_postId_type: { userId, postId, type: 'like' } },
+                where: {
+                    userId_postId_type: { userId, postId, type: 'like' },
+                },
             })
 
             let updatedPost
             let updatedInfo
 
             if (existingLike) {
-                // Если был лайк, меняем его на дизлайк
+                await prisma.like.update({
+                    where: { id: existingLike.id },
+                    data: { type: 'dislike' },
+                })
+
+                // Обновляем счётчики
                 updatedPost = await prisma.post.update({
                     where: { id: postId },
                     data: {
-                        likes: { decrement: 1 }, // Убираем лайк
-                        dislikes: { increment: 1 }, // Добавляем дизлайк
+                        likes: { decrement: 1 },
+                        dislikes: { increment: 1 },
                     },
                 })
 
@@ -53,19 +71,18 @@ const dislikeService = async (postId: number, userId: number) => {
                     },
                 })
 
-                // Обновляем тип лайка на дизлайк
-                await prisma.like.update({
-                    where: { id: existingLike.id },
-                    data: { type: 'dislike' },
-                })
-
                 return {
                     message: 'like-switched-to-dislike',
                     post: updatedPost,
                 }
             }
 
-            // Если не было лайка, просто создаем дизлайк
+            // Новый дизлайк
+            await prisma.like.create({
+                data: { userId, postId, type: 'dislike' },
+            })
+
+            // Обновляем счётчики
             updatedPost = await prisma.post.update({
                 where: { id: postId },
                 data: {
@@ -80,18 +97,12 @@ const dislikeService = async (postId: number, userId: number) => {
                 },
             })
 
-            // Добавляем новый дизлайк
-            await prisma.like.create({
-                data: { userId, postId, type: 'dislike' },
-            })
-
             return { message: 'dislike-added', post: updatedPost }
         })
 
         return result
-    } catch (error) {
-        console.error('Error disliking post:', error)
-        throw new Error('Could not dislike the post')
+    } finally {
+        release() // Освобождаем мьютекс для данного поста
     }
 }
 
