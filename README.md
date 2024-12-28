@@ -1,3 +1,4 @@
+## Запуск
 npm install
 npm run build
 npm run start.
@@ -8,8 +9,12 @@ npm run start.
 "prisma": "npx prisma migrate deploy && npx prisma generate"
 
 ## Стек
+
+# Фронт
 TypeScript, JavaScript, Html, EJS 
 
+# Бэк
 NodeJS, Prisma, Express.
+
 
 Там еще небольшие библиотеки
