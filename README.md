@@ -1,7 +1,9 @@
 ## Запуск
+Перед запуском укажите в .env значения для DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, PORT
+
 npm install
 
-npm run build
+npm run build.
 
 npm run start.
 
