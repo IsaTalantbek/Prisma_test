@@ -18,10 +18,10 @@ npm run start.
 ## Стек
 
 # Фронт
-TypeScript, JavaScript, Html, EJS 
+JavaScript, Html, CSS, EJS (Тут я все у чат гпт списал, не фронтендер сори)
 
 # Бэк
-NodeJS, Prisma, Express.
+TypeScript, NodeJS, Prisma, Express.
 
 
 Там еще небольшие библиотеки
