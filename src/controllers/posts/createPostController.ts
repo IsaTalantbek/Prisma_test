@@ -1,7 +1,7 @@
-import checkInfo from '../../check/infoCheck'
+import checkInfo from '../../check/infoCheck.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import createPostService from './service/createService'
+import createPostService from './service/createService.js'
 
 dotenv.config()
 

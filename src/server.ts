@@ -1,15 +1,15 @@
 import express, { Application } from 'express'
-import publicRouter from './routes/publicRouter'
-import protectedRouter from './routes/protectedRouter'
-import apiRouter from './routes/apiRouter'
+import publicRouter from './routes/publicRouter.js'
+import protectedRouter from './routes/protectedRouter.js'
+import apiRouter from './routes/apiRouter.js'
 import dotenv from 'dotenv'
-import { authenticateToken } from './middleware/authMiddleware'
+import { authenticateToken } from './middleware/authMiddleware.js'
 import cookieParser from 'cookie-parser'
-import errorHandler from './middleware/errorMiddleware'
+import errorHandler from './middleware/errorMiddleware.js'
 import path from 'path'
-import protectedPath from './path/protected'
-import errorPath from './path/errorPath'
-import adminGive from './service/giveAdmin'
+import protectedPath from './path/protected.js'
+import errorPath from './path/errorPath.js'
+import adminGive from './service/giveAdmin.js'
 dotenv.config()
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 10000
@@ -44,5 +44,5 @@ app.use((req, res) => {
 })
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log('server started')
+    console.log(`server started, port: ${PORT}`)
 })

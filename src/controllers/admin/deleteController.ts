@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import banDB from '../../service/banDB'
+import banDB from '../../service/banDB.js'
 
 const prisma = new PrismaClient()
 

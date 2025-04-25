@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import fetchDB from '../../service/fetchDB'
+import fetchDB from '../../service/fetchDB.js'
 
 const prisma = new PrismaClient()
 

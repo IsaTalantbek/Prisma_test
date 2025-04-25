@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import userProfileController from '../controllers/profile/userProfileController'
-import userLoginProfileController from '../controllers/profile/userLoginProfileController'
-import profileController from '../controllers/profile/profileController'
-import profileUpdateController from '../controllers/profile/profileUpdateController'
+import userProfileController from '../controllers/profile/userProfileController.js'
+import userLoginProfileController from '../controllers/profile/userLoginProfileController.js'
+import profileController from '../controllers/profile/profileController.js'
+import profileUpdateController from '../controllers/profile/profileUpdateController.js'
 
 const router = Router()
 

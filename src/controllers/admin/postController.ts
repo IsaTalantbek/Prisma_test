@@ -1,4 +1,4 @@
-import createDB from '../../service/createDB'
+import createDB from '../../service/createDB.js'
 
 const postController = async (req: any, res: any) => {
     try {

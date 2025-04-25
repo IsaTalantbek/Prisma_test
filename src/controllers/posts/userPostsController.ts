@@ -9,7 +9,7 @@ dotenv.config()
 const secretKey = process.env.JWT_SECRET || 'hello'
 
 const userPostsController = async (req: any, res: any) => {
-    const id = parseInt(req.params.id, 10)
+    const id = parseInt(req.params.userId, 10)
 
     if (isNaN(id)) {
         return res.status(400).send('Неправильные значения')

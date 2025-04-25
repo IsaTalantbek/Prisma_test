@@ -1,4 +1,4 @@
-import likeService from './service/likeService'
+import likeService from './service/likeService.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 

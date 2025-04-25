@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import refreshController from '../controllers/auth/refreshController'
-import regPath from '../path/public/regPath'
-import loginPath from '../path/public/loginPath'
-import { redirectIfAuthenticated } from '../middleware/authMiddleware'
+import refreshController from '../controllers/auth/refreshController.js'
+import regPath from '../path/public/regPath.js'
+import loginPath from '../path/public/loginPath.js'
+import { redirectIfAuthenticated } from '../middleware/authMiddleware.js'
 
 const router = Router()
 

@@ -1,5 +1,5 @@
 import { PrismaClient, User } from '@prisma/client'
-import fetchDB from '../../service/fetchDB'
+import fetchDB from '../../service/fetchDB.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'

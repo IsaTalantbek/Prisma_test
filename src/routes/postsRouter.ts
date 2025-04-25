@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import createPostPath from '../path/posts/createPath'
-import createPostController from '../controllers/posts/createPostController'
-import dislikePostController from '../controllers/posts/dislikePostController'
-import likePostController from '../controllers/posts/likePostContoller'
-import deletePostController from '../controllers/posts/deletePostController'
-import postsController from '../controllers/posts/postsController'
-import userPostsController from '../controllers/posts/userPostsController'
+import createPostPath from '../path/posts/createPath.js'
+import createPostController from '../controllers/posts/createPostController.js'
+import dislikePostController from '../controllers/posts/dislikePostController.js'
+import likePostController from '../controllers/posts/likePostContoller.js'
+import deletePostController from '../controllers/posts/deletePostController.js'
+import postsController from '../controllers/posts/postsController.js'
+import userPostsController from '../controllers/posts/userPostsController.js'
 
 const router = Router()
 
@@ -17,7 +17,7 @@ router.post('/:id/like', likePostController)
 
 router.post('/:id/dislike', dislikePostController)
 
-router.get('/:id/posts', userPostsController)
+router.get('/:userId/posts', userPostsController)
 
 router.get('/create', async (req: any, res: any) => {
     res.sendFile(createPostPath)

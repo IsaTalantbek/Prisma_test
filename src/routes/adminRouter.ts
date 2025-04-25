@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import adminPath from '../path/protected/adminPath'
-import getController from '../controllers/admin/getController'
-import deleteController from '../controllers/admin/deleteController'
-import putController from '../controllers/admin/putController'
-import postController from '../controllers/admin/postController'
+import adminPath from '../path/protected/adminPath.js'
+import getController from '../controllers/admin/getController.js'
+import deleteController from '../controllers/admin/deleteController.js'
+import putController from '../controllers/admin/putController.js'
+import postController from '../controllers/admin/postController.js'
 
 const router = Router()
 

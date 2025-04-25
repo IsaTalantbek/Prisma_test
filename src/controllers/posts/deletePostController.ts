@@ -1,4 +1,4 @@
-import deleteService from './service/deleteService'
+import deleteService from './service/deleteService.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 

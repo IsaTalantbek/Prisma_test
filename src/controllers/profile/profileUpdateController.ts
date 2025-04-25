@@ -1,7 +1,7 @@
-import checkAge from '../../check/ageCheck'
-import checkGender from '../../check/genderCheck'
-import checkLogin from '../../check/loginCheck'
-import checkInfo from '../../check/infoCheck'
+import checkAge from '../../check/ageCheck.js'
+import checkGender from '../../check/genderCheck.js'
+import checkLogin from '../../check/loginCheck.js'
+import checkInfo from '../../check/infoCheck.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
@@ -14,7 +14,7 @@ const secretKey = process.env.JWT_SECRET || 'hello world'
 
 const profileUpdateController = async (req: any, res: any) => {
     let { username, info, age, gender } = req.body
-    console.log(req.body)
+    process.env.NODE_ENV === "development" ? console.log(req.body) : null
     age = parseInt(age, 10)
 
     if (!(await checkLogin(username))) {
@@ -54,7 +54,7 @@ const profileUpdateController = async (req: any, res: any) => {
             // Доступ к данным из токена
 
             const userId = decoded.userId
-            console.log(`userId: ${userId}`)
+            process.env.NODE_ENV === "development" ? console.log(`userId: ${userId}`) : null
             const result = await prisma.info.update({
                 where: { userId: userId },
                 data: {

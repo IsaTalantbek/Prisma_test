@@ -67,7 +67,7 @@ const likeService = async (postId: number, userId: number) => {
                 })
 
                 return {
-                    message: 'dislike-switched-to-like',
+                    message: 'like-added',
                     post: updatedPost,
                 }
             }

@@ -1,4 +1,4 @@
-import dislikeService from './service/dislikeService'
+import dislikeService from './service/dislikeService.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
