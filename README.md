@@ -1,11 +1,16 @@
 ## Запуск
-Перед запуском укажите в .env значения для DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, PORT
 
-npm install
+Перед запуском укажите в .env значения для
 
-npm run build.
+DATABASE_URL (postgresql),
+JWT_SECRET,
+JWT_REFRESH_SECRET,
+PORT,
+NODE_ENV (development | production)
 
-npm run start.
+```bash
+$ npm run build:prisma:start
+```
 
 Только там с призмой не та команда. После первого build измените в package.json скрипты prisma
 
@@ -18,10 +23,11 @@ npm run start.
 ## Стек
 
 # Фронт
+
 JavaScript, Html, CSS, EJS (Тут я все у чат гпт списал, не фронтендер сори)
 
 # Бэк
-TypeScript, NodeJS, Prisma, Express.
 
+TypeScript, NodeJS, Prisma, Express.
 
 Там еще небольшие библиотеки

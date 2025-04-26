@@ -1,17 +1,17 @@
-import { PrismaClient } from '@prisma/client'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
+import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
-const secretKey = process.env.JWT_SECRET || 'hello'
+const secretKey = process.env.JWT_SECRET || "hello";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const profileController = async (req: any, res: any) => {
-    const token = req.cookies['aAuthToken']
+    const token = req.cookies["aAuthToken"];
     if (!token) {
-        return res.status(401).send('Непредвиденная ошибка, обновите страницу')
+        return res.status(401).send("Непредвиденная ошибка, обновите страницу");
     }
 
     try {
@@ -19,23 +19,27 @@ const profileController = async (req: any, res: any) => {
             if (err) {
                 return res
                     .status(401)
-                    .send('Непредвиденная ошибка, обновите страницу')
+                    .send("Непредвиденная ошибка, обновите страницу");
             }
 
             // Доступ к данным из токена
-            const userId = decoded.userId
+            const userId = decoded.userId;
             const user = await prisma.user.findFirst({
                 where: { id: userId },
-                include: { info: true },
-            })
+                include: { info: true }
+            });
             if (!user) {
-                return res.status(500).json({ message: 'refresh-notexist-500' })
+                return res
+                    .status(500)
+                    .json({ message: "refresh-notexist-500" });
             }
             if (!user.info) {
-                return res.status(500).json({ message: 'refresh-notexist-500' })
+                return res
+                    .status(500)
+                    .json({ message: "refresh-notexist-500" });
             }
 
-            return res.render('profile', {
+            return res.render("profile", {
                 userId: userId,
                 username: user.username,
                 login: user.login,
@@ -44,13 +48,13 @@ const profileController = async (req: any, res: any) => {
                 age: user.info.age,
                 likes: user.info.likes,
                 dislikes: user.info.dislikes,
-                postsCount: user.info.postCount,
-            })
-        })
+                postsCount: user.info.postCount
+            });
+        });
     } catch (error: any) {
-        console.error(error?.message || error)
-        return res.status(500).json({ message: 'упс, неполадки!' })
+        console.error(error?.message || error);
+        return res.status(500).json({ message: "упс, неполадки!" });
     }
-}
+};
 
-export default profileController
+export default profileController;

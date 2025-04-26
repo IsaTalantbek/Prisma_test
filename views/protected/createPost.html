@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
@@ -144,44 +144,44 @@
         </div>
 
         <script>
-            const textarea = document.getElementById('post-text')
-            const charCount = document.getElementById('char-count')
-            const form = document.getElementById('create-post-form')
+            const textarea = document.getElementById("post-text");
+            const charCount = document.getElementById("char-count");
+            const form = document.getElementById("create-post-form");
 
-            textarea.addEventListener('input', () => {
-                const currentLength = textarea.value.length
-                charCount.textContent = `${currentLength}/250`
-            })
+            textarea.addEventListener("input", () => {
+                const currentLength = textarea.value.length;
+                charCount.textContent = `${currentLength}/250`;
+            });
 
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault() // Остановим стандартную отправку формы
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Остановим стандартную отправку формы
 
-                const postText = textarea.value
+                const postText = textarea.value;
 
                 // Отправим POST-запрос с использованием Fetch
                 try {
-                    const response = await fetch('/a/main/createPost', {
-                        method: 'POST',
+                    const response = await fetch("/a/main/createPost", {
+                        method: "POST",
                         headers: {
-                            'Content-Type': 'application/json',
+                            "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({ text: postText }), // Отправляем текст как JSON
-                    })
+                        body: JSON.stringify({ text: postText }) // Отправляем текст как JSON
+                    });
 
-                    const result = await response.json() // Получаем ответ от сервера
+                    const result = await response.json(); // Получаем ответ от сервера
                     if (response.ok) {
-                        alert('Пост успешно создан!')
-                        window.location = '/a/main'
+                        alert("Пост успешно создан!");
+                        window.location = "/a/main";
                     } else {
                         alert(
-                            `Ошибка: ${result.message || 'Неизвестная ошибка'}`
-                        )
+                            `Ошибка: ${result.message || "Неизвестная ошибка"}`
+                        );
                     }
                 } catch (error) {
-                    console.error('Ошибка при отправке поста:', error)
-                    alert('Ошибка при отправке поста')
+                    console.error("Ошибка при отправке поста:", error);
+                    alert("Ошибка при отправке поста");
                 }
-            })
+            });
         </script>
     </body>
 </html>

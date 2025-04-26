@@ -1,15 +1,15 @@
 const checkPassword = async (password: any) => {
     // Пароль минимум 8 символов, минимум 1 заглавная буква
     if (password.length < 8) {
-        return false
+        return false;
     }
     if (password.length > 50) {
-        return false
+        return false;
     }
     if (!/[A-Z]/.test(password)) {
-        return false
+        return false;
     }
-    return true
-}
+    return true;
+};
 
-export default checkPassword
+export default checkPassword;

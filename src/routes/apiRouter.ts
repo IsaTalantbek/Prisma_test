@@ -1,11 +1,12 @@
-import { Router } from 'express'
-import authRouter from './authRouter.js'
-import DbRouter from './dbRouter.js'
-import { authenticateToken, checkRole } from '../middleware/authMiddleware.js'
+import { Router } from "express";
+import authRouter from "./authRouter.js";
+import DbRouter from "./dbRouter.js";
+import { authenticateToken, checkRole } from "../middleware/authMiddleware.js";
 
-const router = Router()
+const router = Router();
 
-router.use('/db', authenticateToken, checkRole('admin'), DbRouter)
-router.use('/auth', authRouter)
+router.use("/db", authenticateToken, checkRole("admin"), DbRouter);
 
-export default router
+router.use("/auth", authRouter);
+
+export default router;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
@@ -162,83 +162,83 @@
         </div>
         <script>
             const registrationForm =
-                document.getElementById('registration-form')
+                document.getElementById("registration-form");
             const additionalInfoForm = document.getElementById(
-                'additional-info-form'
-            )
-            const skipButton = document.getElementById('skip-info')
-            const submitInfoButton = document.getElementById('submit-info')
+                "additional-info-form"
+            );
+            const skipButton = document.getElementById("skip-info");
+            const submitInfoButton = document.getElementById("submit-info");
 
-            const ageSlider = document.getElementById('age')
-            const sliderValue = document.getElementById('slider-value')
+            const ageSlider = document.getElementById("age");
+            const sliderValue = document.getElementById("slider-value");
 
             // Слушаем изменения на ползунке
-            ageSlider.addEventListener('input', () => {
-                sliderValue.textContent = ageSlider.value
-            })
+            ageSlider.addEventListener("input", () => {
+                sliderValue.textContent = ageSlider.value;
+            });
 
-            registrationForm.addEventListener('submit', (event) => {
-                event.preventDefault()
+            registrationForm.addEventListener("submit", (event) => {
+                event.preventDefault();
 
-                const username = document.getElementById('username').value
-                const password = document.getElementById('password').value
+                const username = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
 
                 if (checkLogin(username) && isValidPassword(password)) {
-                    registrationForm.classList.add('hidden')
-                    additionalInfoForm.classList.remove('hidden')
+                    registrationForm.classList.add("hidden");
+                    additionalInfoForm.classList.remove("hidden");
                 } else {
-                    alert('Пожалуйста, проверьте ваши данные')
+                    alert("Пожалуйста, проверьте ваши данные");
                 }
-            })
+            });
 
-            skipButton.addEventListener('click', () => {
-                const login = document.getElementById('username').value
-                const password = document.getElementById('password').value
+            skipButton.addEventListener("click", () => {
+                const login = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
 
-                fetch('/api/auth/reg', {
-                    method: 'POST',
+                fetch("/api/auth/reg", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ login, password }),
+                    body: JSON.stringify({ login, password })
                 })
                     .then((response) => {
                         if (!response.ok) {
                             // Обрабатываем ошибки статуса (например, 400, 500)
                             return response.json().then((data) => {
-                                throw new Error(data.message || 'Server error')
-                            })
+                                throw new Error(data.message || "Server error");
+                            });
                         }
 
                         // Проверяем данные ответа
                         return response.json().then((data) => {
                             if (
                                 data.message &&
-                                data.message.includes('create-userexist-500')
+                                data.message.includes("create-userexist-500")
                             ) {
-                                throw new Error('Данный логин занят')
+                                throw new Error("Данный логин занят");
                             }
-                            window.location = '/a/main' // Если всё ок, возвращаем данные
-                        })
+                            window.location = "/a/main"; // Если всё ок, возвращаем данные
+                        });
                     })
                     .catch((error) => {
-                        alert(error.message)
-                        location.reload()
-                    })
-            })
+                        alert(error.message);
+                        location.reload();
+                    });
+            });
 
-            submitInfoButton.addEventListener('click', () => {
-                const login = document.getElementById('username').value
-                const password = document.getElementById('password').value
-                const username = document.getElementById('user-username').value
-                const info = document.getElementById('info').value
-                const gender = document.getElementById('gender').value
-                const age = document.getElementById('age').value
+            submitInfoButton.addEventListener("click", () => {
+                const login = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
+                const username = document.getElementById("user-username").value;
+                const info = document.getElementById("info").value;
+                const gender = document.getElementById("gender").value;
+                const age = document.getElementById("age").value;
 
-                fetch('/api/auth/reg', {
-                    method: 'POST',
+                fetch("/api/auth/reg", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
                         login,
@@ -246,50 +246,50 @@
                         username,
                         info,
                         gender,
-                        age,
-                    }),
+                        age
+                    })
                 })
                     .then((response) => {
                         if (!response.ok) {
                             // Обрабатываем ошибки статуса (например, 400, 500)
                             return response.json().then((data) => {
-                                throw new Error(data.message || 'Server error')
-                            })
+                                throw new Error(data.message || "Server error");
+                            });
                         }
 
                         // Проверяем данные ответа
                         return response.json().then((data) => {
                             if (
                                 data.message &&
-                                data.message.includes('create-userexist-500')
+                                data.message.includes("create-userexist-500")
                             ) {
-                                throw new Error('Данный логин занят')
+                                throw new Error("Данный логин занят");
                             }
-                            window.location = '/a/main' // Если всё ок, возвращаем данные
-                        })
+                            window.location = "/a/main"; // Если всё ок, возвращаем данные
+                        });
                     })
                     .catch((error) => {
-                        alert(error.message)
-                        location.reload()
-                    })
-            })
+                        alert(error.message);
+                        location.reload();
+                    });
+            });
 
             function checkLogin(login) {
                 // Убираем все пробелы
-                login = login.replace(/\s+/g, '')
+                login = login.replace(/\s+/g, "");
 
                 // Регулярное выражение для проверки:
                 // допускаются латинские буквы, цифры, и символы _, -, /, #
                 // Логин должен быть длиной от 3 до 20 символов
-                const regex = /^[A-Za-z0-9_\-/#]{3,20}$/
+                const regex = /^[A-Za-z0-9_\-/#]{3,20}$/;
 
-                return regex.test(login)
+                return regex.test(login);
             }
 
             function isValidPassword(password) {
                 // Пароль должен содержать минимум одну заглавную букву, минимум 8 символов без пробелов
-                const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/
-                return passwordRegex.test(password)
+                const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+                return passwordRegex.test(password);
             }
         </script>
     </body>

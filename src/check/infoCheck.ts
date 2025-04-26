@@ -1,14 +1,14 @@
 const checkInfo = async (info: any) => {
     // Проверка типа данных для информации (строка)
-    if (typeof info !== 'string') {
-        return false
+    if (typeof info !== "string") {
+        return false;
     }
 
     // Максимум 250 символов
     if (info.length > 250) {
-        return false
+        return false;
     }
-    return true
-}
+    return true;
+};
 
-export default checkInfo
+export default checkInfo;

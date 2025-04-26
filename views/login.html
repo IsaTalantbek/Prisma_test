@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
@@ -91,40 +91,40 @@
         </div>
 
         <script>
-            const form = document.getElementById('login-form')
+            const form = document.getElementById("login-form");
 
-            form.addEventListener('submit', function (event) {
-                event.preventDefault() // Отменяем отправку формы по умолчанию
+            form.addEventListener("submit", function (event) {
+                event.preventDefault(); // Отменяем отправку формы по умолчанию
 
-                const login = document.getElementById('username').value
-                const password = document.getElementById('password').value
+                const login = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
 
                 // Отправляем данные через fetch
-                fetch('/api/auth/login', {
-                    method: 'POST',
+                fetch("/api/auth/login", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
                         login: login,
-                        password: password,
+                        password: password
                     }),
-                    credentials: 'same-origin', // Это важно для отправки куки
+                    credentials: "same-origin" // Это важно для отправки куки
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        if (data.message === 'login-200') {
+                        if (data.message === "login-200") {
                             // Токен уже в cookies, можно перенаправить
-                            window.location.href = '/a/main'
+                            window.location.href = "/a/main";
                         } else {
-                            alert(data.message)
+                            alert(data.message);
                         }
                     })
                     .catch((error) => {
-                        console.error('Ошибка:', error)
-                        alert('Произошла ошибка при авторизации')
-                    })
-            })
+                        console.error("Ошибка:", error);
+                        alert("Произошла ошибка при авторизации");
+                    });
+            });
         </script>
     </body>
 </html>

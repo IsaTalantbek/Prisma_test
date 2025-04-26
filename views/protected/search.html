@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -60,7 +60,7 @@
                 margin: 50px 0;
             }
 
-            .search-form input[type='text'] {
+            .search-form input[type="text"] {
                 width: 80%;
                 padding: 10px;
                 font-size: 18px;
@@ -68,7 +68,7 @@
                 border-radius: 5px;
             }
 
-            .search-form input[type='submit'] {
+            .search-form input[type="submit"] {
                 margin-left: 10px;
                 padding: 10px 20px;
                 font-size: 18px;
@@ -79,7 +79,7 @@
                 cursor: pointer;
             }
 
-            .search-form input[type='submit']:hover {
+            .search-form input[type="submit"]:hover {
                 background-color: #0056b3;
             }
         </style>
@@ -110,14 +110,14 @@
         <script>
             function handleSearch() {
                 const input = document
-                    .getElementById('searchInput')
-                    .value.trim()
+                    .getElementById("searchInput")
+                    .value.trim();
                 if (/^\d+$/.test(input)) {
                     // Если введён только ID
-                    window.location.href = `/a/profile/${input}`
+                    window.location.href = `/a/profile/${input}`;
                 } else {
                     // Если введён логин
-                    window.location.href = `/a/profile/s/${input}`
+                    window.location.href = `/a/profile/s/${input}`;
                 }
             }
         </script>

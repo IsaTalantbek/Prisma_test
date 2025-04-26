@@ -1,13 +1,13 @@
 const checkGender = async (gender: any) => {
-    if (typeof gender !== 'string') {
-        return false
+    if (typeof gender !== "string") {
+        return false;
     }
 
-    const validGenders: string[] = ['man', 'woman', 'undefined']
+    const validGenders: string[] = ["man", "woman", "undefined"];
     if (!validGenders.includes(gender)) {
-        return false
+        return false;
     }
-    return true
-}
+    return true;
+};
 
-export default checkGender
+export default checkGender;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
@@ -6,7 +6,7 @@
         <title>Admin Panel</title>
         <style>
             body {
-                font-family: 'Arial', sans-serif;
+                font-family: "Arial", sans-serif;
                 background-color: rgb(44, 44, 44);
                 margin: 0;
                 padding: 0;
@@ -45,9 +45,9 @@
                 height: 100%; /* Занимаем всю высоту */
                 justify-content: space-between; /* Равномерное распределение элементов */
             }
-            input[type='text'],
-            input[type='password'],
-            input[type='number'] {
+            input[type="text"],
+            input[type="password"],
+            input[type="number"] {
                 padding: 10px;
                 border: 1px solid rgb(60, 60, 60);
                 border-radius: 5px;
@@ -56,9 +56,9 @@
                 color: rgb(200, 200, 200); /* темно-серый цвет текста */
             }
 
-            input[type='text']:focus,
-            input[type='password']:focus,
-            input[type='number']:focus {
+            input[type="text"]:focus,
+            input[type="password"]:focus,
+            input[type="number"]:focus {
                 background-color: #12293a; /* светло-синий фон при фокусе */
                 border-color: #0e1c22; /* голубая рамка при фокусе */
                 outline: none; /* убираем стандартную обводку */
@@ -141,135 +141,135 @@
         </div>
 
         <script>
-            const apiUrl = '/a/admin/api' // Путь к серверу
+            const apiUrl = "/a/admin/api"; // Путь к серверу
 
             // Функция для создания пользователя
             async function createUser() {
-                const login = document.getElementById('create-username').value
+                const login = document.getElementById("create-username").value;
                 const password =
-                    document.getElementById('create-password').value
+                    document.getElementById("create-password").value;
 
                 if (!login || !password) {
-                    console.log({ error: 'Пожалуйста, заполните все поля!' })
-                    return
+                    console.log({ error: "Пожалуйста, заполните все поля!" });
+                    return;
                 }
 
                 try {
                     const response = await fetch(apiUrl, {
-                        method: 'POST',
+                        method: "POST",
                         headers: {
-                            'Content-Type': 'application/json',
+                            "Content-Type": "application/json"
                         },
                         body: JSON.stringify({ login, password }),
-                        credentials: 'include', // Эта строка гарантирует передачу куки
-                    })
+                        credentials: "include" // Эта строка гарантирует передачу куки
+                    });
                     if (!response.ok) {
-                        console.log(`Ошибка: ${response.message}`)
+                        console.log(`Ошибка: ${response.message}`);
                     }
-                    const result = await response.json()
-                    console.table(result.result)
+                    const result = await response.json();
+                    console.table(result.result);
                 } catch (error) {
-                    console.error('Ошибка при создании пользователя:', error)
+                    console.error("Ошибка при создании пользователя:", error);
                 }
             }
 
             // Функция для обновления пользователя
             async function updateUser() {
-                const value = document.getElementById('update-value').value
-                const id = document.getElementById('update-id').value
+                const value = document.getElementById("update-value").value;
+                const id = document.getElementById("update-id").value;
 
                 if (!value || !id) {
-                    console.log({ error: 'Пожалуйста, заполните все поля!' })
-                    return
+                    console.log({ error: "Пожалуйста, заполните все поля!" });
+                    return;
                 }
 
                 try {
                     const response = await fetch(apiUrl, {
-                        method: 'PUT',
+                        method: "PUT",
                         headers: {
-                            'Content-Type': 'application/json',
+                            "Content-Type": "application/json"
                         },
                         body: JSON.stringify({ value, id }),
-                        credentials: 'include', // Эта строка гарантирует передачу куки
-                    })
+                        credentials: "include" // Эта строка гарантирует передачу куки
+                    });
                     if (!response.ok) {
-                        console.log(`Ошибка: ${response.message}`)
+                        console.log(`Ошибка: ${response.message}`);
                     }
-                    const result = await response.json()
-                    console.log('Пост обновлен:', result)
+                    const result = await response.json();
+                    console.log("Пост обновлен:", result);
                 } catch (error) {
-                    console.error('Ошибка при обновлении пользователя:', error)
+                    console.error("Ошибка при обновлении пользователя:", error);
                 }
             }
 
             // Функция для удаления пользователя
             async function deleteUser() {
-                const id = document.getElementById('delete-id').value
-                const type = document.getElementById('type-delete').value
+                const id = document.getElementById("delete-id").value;
+                const type = document.getElementById("type-delete").value;
                 if (!id) {
-                    console.log({ error: 'Пожалуйста, укажите ID!' })
-                    return
+                    console.log({ error: "Пожалуйста, укажите ID!" });
+                    return;
                 }
-                const queryParams = new URLSearchParams()
-                if (id) queryParams.append('id', id)
-                if (type) queryParams.append('table', type)
+                const queryParams = new URLSearchParams();
+                if (id) queryParams.append("id", id);
+                if (type) queryParams.append("table", type);
 
                 try {
                     const response = await fetch(`${apiUrl}/?${queryParams}`, {
-                        method: 'DELETE',
-                        credentials: 'include', // Эта строка гарантирует передачу куки
-                    })
+                        method: "DELETE",
+                        credentials: "include" // Эта строка гарантирует передачу куки
+                    });
                     if (!response.ok) {
-                        console.log(`Ошибка: ${response.status}`)
+                        console.log(`Ошибка: ${response.status}`);
                     }
-                    const result = await response.json()
-                    console.log('Пост удален/Пользователь забанен:', result)
+                    const result = await response.json();
+                    console.log("Пост удален/Пользователь забанен:", result);
                 } catch (err) {
-                    console.error('Ошибка при удалении пользователя:', err)
+                    console.error("Ошибка при удалении пользователя:", err);
                 }
             }
 
             // Функция для получения пользователя
             async function getUser() {
-                const login = document.getElementById('get-username').value
-                const id = document.getElementById('get-id').value
-                const table = document.getElementById('get-table').value
+                const login = document.getElementById("get-username").value;
+                const id = document.getElementById("get-id").value;
+                const table = document.getElementById("get-table").value;
 
-                const queryParams = new URLSearchParams()
-                if (login) queryParams.append('login', login)
-                if (id) queryParams.append('id', id)
-                if (table) queryParams.append('table', table)
+                const queryParams = new URLSearchParams();
+                if (login) queryParams.append("login", login);
+                if (id) queryParams.append("id", id);
+                if (table) queryParams.append("table", table);
 
                 try {
                     const response = await fetch(`${apiUrl}?${queryParams}`, {
-                        method: 'GET',
-                        credentials: 'include', // Эта строка гарантирует передачу куки
-                    })
+                        method: "GET",
+                        credentials: "include" // Эта строка гарантирует передачу куки
+                    });
                     if (!response.ok) {
-                        console.log(`Ошибка: ${response.messsage}`)
+                        console.log(`Ошибка: ${response.messsage}`);
                     }
-                    const result = await response.json()
-                    console.table(result.result) // Отображаем результат в виде таблицы в консоли
+                    const result = await response.json();
+                    console.table(result.result); // Отображаем результат в виде таблицы в консоли
                 } catch (error) {
-                    console.error('Ошибка при получении пользователя:', error)
+                    console.error("Ошибка при получении пользователя:", error);
                 }
             }
 
             // Привязка обработчиков событий
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 document
-                    .getElementById('create-button')
-                    .addEventListener('click', createUser)
+                    .getElementById("create-button")
+                    .addEventListener("click", createUser);
                 document
-                    .getElementById('update-button')
-                    .addEventListener('click', updateUser)
+                    .getElementById("update-button")
+                    .addEventListener("click", updateUser);
                 document
-                    .getElementById('delete-button')
-                    .addEventListener('click', deleteUser)
+                    .getElementById("delete-button")
+                    .addEventListener("click", deleteUser);
                 document
-                    .getElementById('get-button')
-                    .addEventListener('click', getUser)
-            })
+                    .getElementById("get-button")
+                    .addEventListener("click", getUser);
+            });
         </script>
     </body>
 </html>
